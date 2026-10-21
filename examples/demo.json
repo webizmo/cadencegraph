@@ -1,0 +1,795 @@
+{
+  "schemaVersion": 1,
+  "id": "cadencegraph-demo",
+  "name": "A little more possible",
+  "revision": 0,
+  "locales": [
+    "en",
+    "tr"
+  ],
+  "ratios": [
+    "16:9",
+    "9:16"
+  ],
+  "fps": 24,
+  "brand": {
+    "name": "CadenceGraph",
+    "accent": "#c7f36c",
+    "background": "#f3f1e7",
+    "foreground": "#14291f",
+    "fontFamily": "Manrope"
+  },
+  "assets": [
+    {
+      "id": "orbit-mark",
+      "type": "image",
+      "src": "assets/orbit-mark.svg",
+      "name": "Original CadenceGraph orbit mark",
+      "license": "Apache-2.0"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "scene-intro",
+      "name": "A little more possible",
+      "kind": "intro",
+      "theme": "inverted",
+      "sentences": [
+        {
+          "id": "sentence-intro",
+          "text": {
+            "en": "Every good idea deserves room to move. Meet CadenceGraph.",
+            "tr": "Her iyi fikir, hareket edecek bir alanı hak eder. CadenceGraph ile tanışın."
+          },
+          "duration": {
+            "en": 6.5,
+            "tr": 7.5
+          }
+        }
+      ],
+      "nodes": [
+        {
+          "id": "intro-eyebrow",
+          "type": "text",
+          "role": "eyebrow",
+          "content": {
+            "en": "AN OPEN MOTION STUDIO",
+            "tr": "AÇIK KAYNAK HAREKET STÜDYOSU"
+          },
+          "layout": {
+            "x": 7,
+            "y": 17,
+            "width": 42,
+            "height": 4
+          },
+          "overrides": {
+            "9:16": {
+              "layout": {
+                "x": 9,
+                "y": 12,
+                "width": 82,
+                "height": 3
+              },
+              "protected": false
+            }
+          },
+          "timing": {
+            "sentenceId": "sentence-intro"
+          },
+          "animation": {
+            "enter": "rise"
+          },
+          "style": {
+            "fontSize": 23,
+            "fontWeight": 600
+          }
+        },
+        {
+          "id": "intro-headline",
+          "type": "text",
+          "role": "headline",
+          "content": {
+            "en": "A little more\npossible.",
+            "tr": "Her revizyonla\ndaha mümkün."
+          },
+          "layout": {
+            "x": 7,
+            "y": 26,
+            "width": 47,
+            "height": 30
+          },
+          "overrides": {
+            "9:16": {
+              "layout": {
+                "x": 9,
+                "y": 18,
+                "width": 82,
+                "height": 19
+              },
+              "protected": false
+            }
+          },
+          "timing": {
+            "sentenceId": "sentence-intro"
+          },
+          "animation": {
+            "enter": "rise",
+            "delay": 0.12
+          },
+          "style": {
+            "fontSize": 112,
+            "fontWeight": 600
+          }
+        },
+        {
+          "id": "intro-deck",
+          "type": "text",
+          "role": "deck",
+          "content": {
+            "en": "Ideas move. Your design decisions stay.",
+            "tr": "Fikirler hareket eder. Tasarım kararların kalır."
+          },
+          "layout": {
+            "x": 7,
+            "y": 65,
+            "width": 40,
+            "height": 10
+          },
+          "overrides": {
+            "9:16": {
+              "layout": {
+                "x": 9,
+                "y": 38,
+                "width": 80,
+                "height": 6
+              },
+              "protected": false
+            }
+          },
+          "timing": {
+            "sentenceId": "sentence-intro"
+          },
+          "animation": {
+            "enter": "rise",
+            "delay": 0.28
+          },
+          "style": {
+            "fontSize": 32,
+            "fontWeight": 400
+          }
+        },
+        {
+          "id": "intro-orbit",
+          "type": "component",
+          "role": "hero-visual",
+          "content": {
+            "en": "",
+            "tr": ""
+          },
+          "layout": {
+            "x": 53,
+            "y": 16,
+            "width": 43,
+            "height": 66
+          },
+          "overrides": {
+            "9:16": {
+              "layout": {
+                "x": 8,
+                "y": 46,
+                "width": 84,
+                "height": 38
+              },
+              "protected": false
+            }
+          },
+          "timing": {
+            "sentenceId": "sentence-intro"
+          },
+          "animation": {
+            "enter": "scale",
+            "delay": 0.1
+          },
+          "component": "signal-orbit",
+          "props": {
+            "label": "Living project"
+          }
+        },
+        {
+          "id": "intro-logo",
+          "type": "media",
+          "role": "brand-mark",
+          "content": {
+            "en": "",
+            "tr": ""
+          },
+          "layout": {
+            "x": 7,
+            "y": 5.3,
+            "width": 2.7,
+            "height": 4.8
+          },
+          "overrides": {
+            "9:16": {
+              "layout": {
+                "x": 9,
+                "y": 5.5,
+                "width": 5,
+                "height": 2.8
+              },
+              "protected": false
+            }
+          },
+          "timing": {
+            "sentenceId": "sentence-intro"
+          },
+          "animation": {
+            "enter": "fade"
+          },
+          "assetId": "orbit-mark"
+        },
+        {
+          "id": "intro-caption",
+          "type": "caption",
+          "role": "caption",
+          "content": {
+            "en": "Every good idea deserves room to move.",
+            "tr": "Her iyi fikir, hareket edecek bir alanı hak eder."
+          },
+          "layout": {
+            "x": 8,
+            "y": 92,
+            "width": 84,
+            "height": 4.5
+          },
+          "overrides": {
+            "9:16": {
+              "layout": {
+                "x": 8,
+                "y": 92,
+                "width": 84,
+                "height": 4
+              },
+              "protected": false
+            }
+          },
+          "timing": {
+            "sentenceId": "sentence-intro"
+          },
+          "animation": {
+            "enter": "fade",
+            "delay": 0.3
+          },
+          "style": {
+            "fontSize": 27,
+            "align": "center"
+          }
+        }
+      ]
+    },
+    {
+      "id": "scene-features",
+      "name": "Change without losing the craft",
+      "kind": "features",
+      "sentences": [
+        {
+          "id": "sentence-features",
+          "text": {
+            "en": "Change the language. Extend the narration. Your timing follows, and your hand-tuned layouts stay protected.",
+            "tr": "Dili değiştir. Anlatımı uzat. Zamanlama birlikte güncellenir, elle yaptığın yerleşimler korunur."
+          },
+          "duration": {
+            "en": 7,
+            "tr": 8
+          }
+        }
+      ],
+      "nodes": [
+        {
+          "id": "features-eyebrow",
+          "type": "text",
+          "role": "eyebrow",
+          "content": {
+            "en": "CONNECTED BY DESIGN",
+            "tr": "TASARIMIYLA BİRBİRİNE BAĞLI"
+          },
+          "layout": {
+            "x": 7,
+            "y": 12,
+            "width": 44,
+            "height": 4
+          },
+          "overrides": {
+            "9:16": {
+              "layout": {
+                "x": 9,
+                "y": 9,
+                "width": 82,
+                "height": 3
+              },
+              "protected": false
+            }
+          },
+          "timing": {
+            "sentenceId": "sentence-features"
+          },
+          "animation": {
+            "enter": "rise"
+          },
+          "style": {
+            "fontSize": 23,
+            "fontWeight": 600
+          }
+        },
+        {
+          "id": "features-headline",
+          "type": "text",
+          "role": "headline",
+          "content": {
+            "en": "Change the story.\nKeep the craft.",
+            "tr": "Hikâyeyi değiştir.\nEmeğini koru."
+          },
+          "layout": {
+            "x": 7,
+            "y": 22,
+            "width": 45,
+            "height": 25
+          },
+          "overrides": {
+            "9:16": {
+              "layout": {
+                "x": 9,
+                "y": 16,
+                "width": 82,
+                "height": 18
+              },
+              "protected": false
+            }
+          },
+          "timing": {
+            "sentenceId": "sentence-features"
+          },
+          "animation": {
+            "enter": "rise",
+            "delay": 0.08
+          },
+          "style": {
+            "fontSize": 88,
+            "fontWeight": 600
+          }
+        },
+        {
+          "id": "features-deck",
+          "type": "text",
+          "role": "deck",
+          "content": {
+            "en": "Human hands. Agent speed.\nOne editable project.",
+            "tr": "İnsan dokunuşu. Ajan hızı.\nTek düzenlenebilir proje."
+          },
+          "layout": {
+            "x": 7,
+            "y": 53,
+            "width": 42,
+            "height": 11
+          },
+          "overrides": {
+            "9:16": {
+              "layout": {
+                "x": 9,
+                "y": 35,
+                "width": 82,
+                "height": 7
+              },
+              "protected": false
+            }
+          },
+          "timing": {
+            "sentenceId": "sentence-features"
+          },
+          "animation": {
+            "enter": "rise",
+            "delay": 0.2
+          },
+          "style": {
+            "fontSize": 30
+          }
+        },
+        {
+          "id": "features-board",
+          "type": "component",
+          "role": "revision-visual",
+          "content": {
+            "en": "",
+            "tr": ""
+          },
+          "layout": {
+            "x": 54,
+            "y": 13,
+            "width": 40,
+            "height": 57
+          },
+          "overrides": {
+            "9:16": {
+              "layout": {
+                "x": 8,
+                "y": 44,
+                "width": 84,
+                "height": 28
+              },
+              "protected": false
+            }
+          },
+          "timing": {
+            "sentenceId": "sentence-features"
+          },
+          "animation": {
+            "enter": "scale",
+            "delay": 0.16
+          },
+          "component": "revision-board",
+          "props": {
+            "label": "Manual position preserved",
+            "before": "EN · 6.5s",
+            "after": "TR · 7.5s"
+          }
+        },
+        {
+          "id": "feature-timing",
+          "type": "card",
+          "role": "feature-card",
+          "content": {
+            "en": "Timing that follows meaning",
+            "tr": "Anlama bağlı zamanlama"
+          },
+          "layout": {
+            "x": 7,
+            "y": 76,
+            "width": 40,
+            "height": 11
+          },
+          "overrides": {
+            "9:16": {
+              "layout": {
+                "x": 9,
+                "y": 75,
+                "width": 82,
+                "height": 6
+              },
+              "protected": false
+            }
+          },
+          "timing": {
+            "sentenceId": "sentence-features"
+          },
+          "animation": {
+            "enter": "slide",
+            "delay": 0.4
+          },
+          "props": {
+            "icon": "clock",
+            "label": "SENTENCE-LINKED",
+            "metric": "01"
+          }
+        },
+        {
+          "id": "feature-protection",
+          "type": "card",
+          "role": "feature-card",
+          "content": {
+            "en": "Your layout, protected",
+            "tr": "Yerleşimin güvence altında"
+          },
+          "layout": {
+            "x": 52,
+            "y": 76,
+            "width": 40,
+            "height": 11
+          },
+          "overrides": {
+            "9:16": {
+              "layout": {
+                "x": 9,
+                "y": 83,
+                "width": 82,
+                "height": 6
+              },
+              "protected": false
+            }
+          },
+          "timing": {
+            "sentenceId": "sentence-features"
+          },
+          "animation": {
+            "enter": "slide",
+            "delay": 0.55
+          },
+          "props": {
+            "icon": "anchor",
+            "label": "HUMAN-IN-CONTROL",
+            "metric": "02"
+          }
+        },
+        {
+          "id": "features-caption",
+          "type": "caption",
+          "role": "caption",
+          "content": {
+            "en": "Revise together. Keep every deliberate detail.",
+            "tr": "Birlikte düzenle. Verdiğin her kararı koru."
+          },
+          "layout": {
+            "x": 8,
+            "y": 92,
+            "width": 84,
+            "height": 4.5
+          },
+          "overrides": {
+            "9:16": {
+              "layout": {
+                "x": 8,
+                "y": 93,
+                "width": 84,
+                "height": 3.5
+              },
+              "protected": false
+            }
+          },
+          "timing": {
+            "sentenceId": "sentence-features"
+          },
+          "animation": {
+            "enter": "fade",
+            "delay": 0.25
+          },
+          "style": {
+            "fontSize": 27,
+            "align": "center"
+          }
+        }
+      ]
+    },
+    {
+      "id": "scene-outro",
+      "name": "One source, every version",
+      "kind": "outro",
+      "sentences": [
+        {
+          "id": "sentence-outro",
+          "text": {
+            "en": "Two languages. Two formats. One living source. Make something worth moving.",
+            "tr": "İki dil. İki format. Yaşayan tek kaynak. Harekete değer bir şey üret."
+          },
+          "duration": {
+            "en": 6,
+            "tr": 6.5
+          }
+        }
+      ],
+      "nodes": [
+        {
+          "id": "outro-eyebrow",
+          "type": "text",
+          "role": "eyebrow",
+          "content": {
+            "en": "DESIGNED TO KEEP MOVING",
+            "tr": "HAREKETE DEVAM ETMEK İÇİN"
+          },
+          "layout": {
+            "x": 7,
+            "y": 16,
+            "width": 44,
+            "height": 4
+          },
+          "overrides": {
+            "9:16": {
+              "layout": {
+                "x": 9,
+                "y": 10,
+                "width": 82,
+                "height": 3
+              },
+              "protected": false
+            }
+          },
+          "timing": {
+            "sentenceId": "sentence-outro"
+          },
+          "animation": {
+            "enter": "rise"
+          },
+          "style": {
+            "fontSize": 23,
+            "fontWeight": 600
+          }
+        },
+        {
+          "id": "outro-headline",
+          "type": "text",
+          "role": "headline",
+          "content": {
+            "en": "One source.\nEvery version.",
+            "tr": "Tek kaynak.\nHer sürüm."
+          },
+          "layout": {
+            "x": 7,
+            "y": 27,
+            "width": 44,
+            "height": 28
+          },
+          "overrides": {
+            "9:16": {
+              "layout": {
+                "x": 9,
+                "y": 17,
+                "width": 82,
+                "height": 18
+              },
+              "protected": false
+            }
+          },
+          "timing": {
+            "sentenceId": "sentence-outro"
+          },
+          "animation": {
+            "enter": "rise",
+            "delay": 0.12
+          },
+          "style": {
+            "fontSize": 104,
+            "fontWeight": 600
+          }
+        },
+        {
+          "id": "outro-variants",
+          "type": "component",
+          "role": "variant-visual",
+          "content": {
+            "en": "",
+            "tr": ""
+          },
+          "layout": {
+            "x": 53,
+            "y": 17,
+            "width": 42,
+            "height": 62
+          },
+          "overrides": {
+            "9:16": {
+              "layout": {
+                "x": 8,
+                "y": 40,
+                "width": 84,
+                "height": 33
+              },
+              "protected": false
+            }
+          },
+          "timing": {
+            "sentenceId": "sentence-outro"
+          },
+          "animation": {
+            "enter": "scale",
+            "delay": 0.12
+          },
+          "component": "variant-fan",
+          "props": {
+            "locales": [
+              "EN",
+              "TR"
+            ]
+          }
+        },
+        {
+          "id": "outro-deck",
+          "type": "text",
+          "role": "deck",
+          "content": {
+            "en": "Open source. Local first.\nMade for your next revision.",
+            "tr": "Açık kaynak. Yerel çalışma.\nBir sonraki revizyonun için."
+          },
+          "layout": {
+            "x": 7,
+            "y": 60,
+            "width": 42,
+            "height": 10
+          },
+          "overrides": {
+            "9:16": {
+              "layout": {
+                "x": 9,
+                "y": 77,
+                "width": 82,
+                "height": 7
+              },
+              "protected": false
+            }
+          },
+          "timing": {
+            "sentenceId": "sentence-outro"
+          },
+          "animation": {
+            "enter": "rise",
+            "delay": 0.28
+          },
+          "style": {
+            "fontSize": 30
+          }
+        },
+        {
+          "id": "outro-cta",
+          "type": "cta",
+          "role": "cta",
+          "content": {
+            "en": "Make it move",
+            "tr": "Harekete geçir"
+          },
+          "layout": {
+            "x": 7,
+            "y": 76,
+            "width": 31,
+            "height": 9
+          },
+          "overrides": {
+            "9:16": {
+              "layout": {
+                "x": 9,
+                "y": 86,
+                "width": 60,
+                "height": 5
+              },
+              "protected": false
+            }
+          },
+          "timing": {
+            "sentenceId": "sentence-outro"
+          },
+          "animation": {
+            "enter": "rise",
+            "delay": 0.5
+          },
+          "style": {
+            "fontSize": 31,
+            "fontWeight": 600
+          }
+        },
+        {
+          "id": "outro-caption",
+          "type": "caption",
+          "role": "caption",
+          "content": {
+            "en": "Two languages. Two formats. One living source.",
+            "tr": "İki dil. İki format. Yaşayan tek kaynak."
+          },
+          "layout": {
+            "x": 8,
+            "y": 93,
+            "width": 84,
+            "height": 4
+          },
+          "overrides": {
+            "9:16": {
+              "layout": {
+                "x": 8,
+                "y": 94,
+                "width": 84,
+                "height": 3
+              },
+              "protected": false
+            }
+          },
+          "timing": {
+            "sentenceId": "sentence-outro"
+          },
+          "animation": {
+            "enter": "fade",
+            "delay": 0.3
+          },
+          "style": {
+            "fontSize": 27,
+            "align": "center"
+          }
+        }
+      ]
+    }
+  ]
+}

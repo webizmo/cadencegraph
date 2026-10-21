@@ -1,0 +1,13 @@
+{
+  "verifiedAt": "2026-10-21T22:25:27.643Z",
+  "realEndpoint": true,
+  "queuedStatus": 202,
+  "finalStatus": "complete",
+  "downloadStatus": 200,
+  "mp4Signature": "ftyp",
+  "bytes": 92633,
+  "sha256": "d387240597bbf0537053c0ffb266b1174e4faf7b9876fc675612741fa3d4048c",
+  "locale": "en",
+  "ratio": "16:9",
+  "duration": 1.25
+}

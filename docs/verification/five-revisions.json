@@ -1,0 +1,181 @@
+{
+  "verifiedAt": "2026-10-21T22:22:09.168Z",
+  "realClaudeCall": true,
+  "audioFixture": "Original instrumental WAV, nine seconds; proves media retiming, not spoken-word alignment.",
+  "checks": {
+    "manualOverridesPreserved": true,
+    "outroPreserved": true,
+    "englishDurationUnchanged": true,
+    "turkishDurationChangedTo23": true,
+    "secondBenefitAdded": true,
+    "brandPropagated": true,
+    "jsonRoundTrip": true,
+    "undoMonotonic": true
+  },
+  "steps": [
+    {
+      "id": "revision-manual-card",
+      "actor": "human",
+      "beforeRevision": 0,
+      "afterRevision": 1,
+      "changes": [
+        {
+          "operation": "set-layout",
+          "target": "intro-orbit",
+          "description": "Moved intro-orbit in 9:16; manual layout protected.",
+          "locales": [
+            "en",
+            "tr"
+          ],
+          "ratios": [
+            "9:16"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "revision-logo-lock",
+      "actor": "human",
+      "beforeRevision": 1,
+      "afterRevision": 2,
+      "changes": [
+        {
+          "operation": "set-protection",
+          "target": "intro-logo",
+          "description": "Protected intro-logo in 9:16.",
+          "locales": [
+            "en",
+            "tr"
+          ],
+          "ratios": [
+            "9:16"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "revision-turkish-audio",
+      "actor": "human",
+      "beforeRevision": 2,
+      "afterRevision": 3,
+      "changes": [
+        {
+          "operation": "set-sentence-audio",
+          "target": "sentence-features",
+          "description": "Replaced tr narration and retimed sentence-features to 9s.",
+          "locales": [
+            "tr"
+          ],
+          "ratios": [
+            "16:9",
+            "9:16"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "revision-ai-benefit",
+      "actor": "ai",
+      "beforeRevision": 3,
+      "afterRevision": 4,
+      "changes": [
+        {
+          "operation": "add-node",
+          "target": "intro-benefit",
+          "description": "Added intro-benefit to A little more possible.",
+          "locales": [
+            "en",
+            "tr"
+          ],
+          "ratios": [
+            "16:9",
+            "9:16"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "revision-shared-brand",
+      "actor": "human",
+      "beforeRevision": 4,
+      "afterRevision": 5,
+      "changes": [
+        {
+          "operation": "set-brand",
+          "target": "cadencegraph-demo",
+          "description": "Updated shared brand across all variants.",
+          "locales": [
+            "en",
+            "tr"
+          ],
+          "ratios": [
+            "16:9",
+            "9:16"
+          ]
+        }
+      ]
+    }
+  ],
+  "proposal": {
+    "id": "cafc35dc-25b5-48b8-81f3-964c9878e987",
+    "baseRevision": 3,
+    "summary": "Added one new feature card, intro-benefit, to the intro scene. It's tied to sentence-intro and reads \"Every edit, reversible\" in English and \"Her değişiklik geri alınabilir\" in Turkish. In landscape it sits at x7 y79 with width 42 and height 8. That puts it between the deck (which ends at y75) and the caption (which starts at y92), and to the left of the orbit visual. The portrait override puts it at x9 y86 with width 82 and height 4.5, with protected set to false. That places it between the protected orbit (which ends at y84) and the caption (which starts at y92). Nothing else changes, including the outro, existing text, brand, layers and layouts.",
+    "operations": [
+      {
+        "type": "add-node",
+        "sceneId": "scene-intro",
+        "node": {
+          "id": "intro-benefit",
+          "type": "card",
+          "role": "feature-card",
+          "content": {
+            "en": "Every edit, reversible",
+            "tr": "Her değişiklik geri alınabilir"
+          },
+          "layout": {
+            "x": 7,
+            "y": 79,
+            "width": 42,
+            "height": 8
+          },
+          "overrides": {
+            "9:16": {
+              "layout": {
+                "x": 9,
+                "y": 86,
+                "width": 82,
+                "height": 4.5
+              },
+              "protected": false
+            }
+          },
+          "timing": {
+            "sentenceId": "sentence-intro"
+          }
+        }
+      }
+    ]
+  },
+  "outputs": [
+    {
+      "locale": "en",
+      "ratio": "16:9",
+      "duration": 19.5
+    },
+    {
+      "locale": "en",
+      "ratio": "9:16",
+      "duration": 19.5
+    },
+    {
+      "locale": "tr",
+      "ratio": "16:9",
+      "duration": 23
+    },
+    {
+      "locale": "tr",
+      "ratio": "9:16",
+      "duration": 23
+    }
+  ]
+}

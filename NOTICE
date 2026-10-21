@@ -1,0 +1,6 @@
+CadenceGraph
+Copyright 2026 Webizmo contributors
+
+Original CadenceGraph source code and original demo graphics are licensed under Apache-2.0.
+Dependencies retain their own licenses. See THIRD_PARTY_NOTICES.md and public/assets/ for bundled font notices.
+FFmpeg and Chromium are external tools with separate licenses and are not distributed in this repository.

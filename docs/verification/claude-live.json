@@ -1,0 +1,38 @@
+{
+  "verifiedAt": "2026-10-21T22:15:58.634Z",
+  "provider": "claude-cli",
+  "realProviderCall": true,
+  "checks": {
+    "manualPortraitLayoutPreserved": true,
+    "outroPreserved": true,
+    "englishDurationUnchanged": true,
+    "turkishDurationUpdated": true,
+    "brandUpdated": true,
+    "headlineUpdated": true
+  },
+  "proposal": {
+    "id": "c737a360-c2a7-4712-a08a-4c0c57767216",
+    "baseRevision": 1,
+    "summary": "Changed the English intro headline to \"A little more\\npossible together.\", set the brand accent to #9ff2cb and made the Turkish features sentence 9 seconds long (it was 8). The English duration, all layouts, all other text and the whole outro are unchanged.",
+    "operations": [
+      {
+        "type": "set-text",
+        "nodeId": "intro-headline",
+        "locale": "en",
+        "text": "A little more\npossible together."
+      },
+      {
+        "type": "set-brand",
+        "brand": {
+          "accent": "#9ff2cb"
+        }
+      },
+      {
+        "type": "set-sentence-duration",
+        "sentenceId": "sentence-features",
+        "locale": "tr",
+        "duration": 9
+      }
+    ]
+  }
+}

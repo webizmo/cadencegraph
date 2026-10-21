@@ -1,0 +1,43 @@
+{
+  "name": "cadencegraph",
+  "version": "0.1.0-alpha.1",
+  "private": true,
+  "type": "module",
+  "description": "An open motion studio that keeps meaning, timing and human layout decisions connected.",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "tsx server/index.ts",
+    "dev:ui": "vite --host 127.0.0.1",
+    "build": "tsc --noEmit && vite build",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "render": "tsx scripts/render.ts",
+    "check": "npm run test && npm run build",
+    "start": "NODE_ENV=production tsx server/index.ts",
+    "format": "prettier --write src server scripts tests *.ts",
+    "format:check": "prettier --check src server scripts tests *.ts"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "lucide-react": "^0.468.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.0",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "playwright": "^1.56.0",
+    "prettier": "^3.9.10",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0",
+    "vite": "^7.1.0",
+    "vitest": "^4.1.12"
+  }
+}

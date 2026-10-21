@@ -1,0 +1,200 @@
+@font-face {
+  font-family: Manrope;
+  src: url("/assets/fonts/Manrope-Variable.ttf") format("truetype");
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: block;
+}
+.cg-composition {
+  container-type: inline-size;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  background: var(--cg-bg);
+  color: var(--cg-fg);
+  font-family: var(--cg-font), Manrope, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.cg-composition * {
+  box-sizing: border-box;
+}
+.cg-atmosphere {
+  position: absolute;
+  inset: -15%;
+  z-index: -1;
+  background:
+    radial-gradient(
+      ellipse at 84% 28%,
+      color-mix(in srgb, var(--cg-accent) 12%, transparent),
+      transparent 47%
+    ),
+    radial-gradient(
+      ellipse at 8% 85%,
+      color-mix(in srgb, var(--cg-accent) 5%, transparent),
+      transparent 50%
+    );
+}
+.cg-running-mark {
+  position: absolute;
+  top: 6.3%;
+  left: 7%;
+  display: flex;
+  align-items: center;
+  gap: 0.65cqw;
+  font-size: 1.14cqw;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  opacity: 0.9;
+}
+.cg-running-mark svg {
+  width: 2.7cqw;
+  height: 1.5cqw;
+}
+.cg-scene-count {
+  position: absolute;
+  right: 7%;
+  top: 6.5%;
+  font-size: 0.95cqw;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+}
+.cg-scene-count span {
+  opacity: 0.35;
+}
+.cg-node {
+  transform-origin: center;
+  user-select: none;
+  will-change: transform, opacity;
+}
+.cg-node.cg-selected {
+  outline: 2px solid #8af4b9;
+  outline-offset: 5px;
+}
+.cg-node.cg-selected:after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #8af4b9;
+  right: -9px;
+  bottom: -9px;
+}
+.cg-text {
+  width: 100%;
+  height: 100%;
+  white-space: pre-line;
+  overflow-wrap: break-word;
+}
+.cg-headline {
+  letter-spacing: -0.065em;
+}
+.cg-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.19em;
+}
+.cg-deck {
+  letter-spacing: -0.02em;
+  opacity: 0.65;
+}
+.cg-card {
+  display: flex;
+  align-items: center;
+  gap: 5%;
+  height: 100%;
+  border: 1px solid color-mix(in srgb, var(--cg-fg) 15%, transparent);
+  background: color-mix(in srgb, var(--cg-bg) 70%, white 30%);
+  border-radius: 1.05cqw;
+  padding: 4% 6%;
+  font-weight: 650;
+  letter-spacing: -0.025em;
+}
+.cg-card-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 1.8em;
+  width: 1.8em;
+  height: 1.8em;
+  background: var(--cg-accent);
+  color: #14291f;
+  border-radius: 0.6em;
+  font-size: 1.2em;
+}
+.cg-card-copy {
+  flex: 1;
+  line-height: 1.25;
+}
+.cg-card-check {
+  opacity: 0.5;
+  font-size: 1.2em;
+}
+.cg-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1em;
+  width: 100%;
+  height: 100%;
+  padding: 0 7%;
+  border-radius: 0.8cqw;
+  color: #14291f;
+  background: var(--cg-accent);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+.cg-cta-arrow {
+  font-size: 1.5em;
+}
+.cg-caption {
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  opacity: 0.55;
+}
+.cg-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 0.3%;
+  background: color-mix(in srgb, var(--cg-fg) 5%, transparent);
+}
+.cg-progress i {
+  display: block;
+  height: 100%;
+  background: var(--cg-accent);
+}
+.cg-missing {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  border: 2px dashed #e27d7d;
+  color: #c73b3b;
+  font-size: 2cqw;
+}
+.cg-portrait .cg-running-mark {
+  left: 9%;
+  top: 6%;
+  font-size: 2cqw;
+  gap: 1.3cqw;
+}
+.cg-portrait .cg-running-mark svg {
+  width: 5cqw;
+  height: 3cqw;
+}
+.cg-portrait .cg-scene-count {
+  font-size: 1.8cqw;
+  right: 9%;
+  top: 6.3%;
+}
+.cg-portrait .cg-card {
+  border-radius: 2cqw;
+}
+.cg-portrait .cg-cta {
+  border-radius: 1.5cqw;
+}
