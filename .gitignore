@@ -10,3 +10,8 @@ playwright-report/
 .local/
 *.log
 public/assets/uploads/
+
+# Local working scripts and scratch assets
+work/
+
+.playwright-cli/

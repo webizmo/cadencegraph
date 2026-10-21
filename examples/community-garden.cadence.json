@@ -1,0 +1,469 @@
+{
+  "schemaVersion": 1,
+  "id": "project-f95e1030-864",
+  "name": "A garden, together",
+  "revision": 59,
+  "locales": [
+    "en",
+    "tr"
+  ],
+  "ratios": [
+    "16:9",
+    "9:16"
+  ],
+  "fps": 30,
+  "brand": {
+    "name": "Paper",
+    "accent": "#d48a5f",
+    "background": "#f4efe5",
+    "foreground": "#242322",
+    "fontFamily": "Manrope"
+  },
+  "assets": [
+    {
+      "id": "media-40ca32d0-92a7-4cb7-95e9-57ce301a71e3",
+      "type": "image",
+      "src": "assets/demo/garden-original.png",
+      "name": "garden-original.png"
+    },
+    {
+      "id": "media-eb8532cb-a42f-43fd-b146-235e8c9e333d",
+      "type": "video",
+      "src": "assets/demo/garden-motion.mp4",
+      "name": "garden-motion.mp4"
+    },
+    {
+      "id": "media-5fcbe79a-79fb-4dd8-be05-cdf9d27a2ffd",
+      "type": "audio",
+      "src": "assets/demo/garden-tone.wav",
+      "name": "garden-tone.wav"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "project-f95e1030-864-scene-1",
+      "name": "A seed of possibility",
+      "kind": "blank",
+      "theme": "brand",
+      "sentences": [
+        {
+          "id": "project-f95e1030-864-scene-1-sentence-1",
+          "text": {
+            "en": "",
+            "tr": ""
+          },
+          "duration": {
+            "en": 3,
+            "tr": 3.5
+          }
+        }
+      ],
+      "nodes": [
+        {
+          "id": "layer-519a92f0-7eb",
+          "type": "text",
+          "content": {
+            "en": "A garden,\ntogether.",
+            "tr": "Birlikte\nyeşertelim."
+          },
+          "layout": {
+            "x": 10,
+            "y": 31,
+            "width": 80,
+            "height": 25
+          },
+          "timing": {
+            "sentenceId": "project-f95e1030-864-scene-1-sentence-1"
+          },
+          "style": {
+            "fontSize": 88,
+            "fontWeight": 700,
+            "align": "left"
+          },
+          "animation": {
+            "enter": "scale",
+            "delay": 0
+          },
+          "overrides": {
+            "16:9": {
+              "layout": {
+                "y": 10,
+                "height": 27
+              },
+              "protected": true
+            },
+            "9:16": {
+              "layout": {
+                "y": 15,
+                "height": 24
+              },
+              "protected": true
+            }
+          }
+        },
+        {
+          "id": "media-66df9f2d-e19",
+          "type": "media",
+          "content": {
+            "en": "Your media",
+            "tr": "Görselin"
+          },
+          "layout": {
+            "x": 16,
+            "y": 18,
+            "width": 68,
+            "height": 64
+          },
+          "timing": {
+            "sentenceId": "project-f95e1030-864-scene-1-sentence-1"
+          },
+          "style": {
+            "fontSize": 30,
+            "fontWeight": 500,
+            "align": "left"
+          },
+          "animation": {
+            "enter": "fade",
+            "delay": 0
+          },
+          "assetId": "media-40ca32d0-92a7-4cb7-95e9-57ce301a71e3",
+          "overrides": {
+            "16:9": {
+              "layout": {
+                "x": 25,
+                "y": 43,
+                "width": 50,
+                "height": 50
+              },
+              "protected": true
+            },
+            "9:16": {
+              "layout": {
+                "x": 9,
+                "y": 43,
+                "width": 82,
+                "height": 45
+              },
+              "protected": true
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "scene-c64fff73-201",
+      "name": "Room to grow",
+      "kind": "blank",
+      "theme": "brand",
+      "sentences": [
+        {
+          "id": "scene-c64fff73-201-sentence-1",
+          "text": {
+            "en": "",
+            "tr": ""
+          },
+          "duration": {
+            "en": 3,
+            "tr": 3.5
+          },
+          "audioAssetId": {
+            "en": "media-5fcbe79a-79fb-4dd8-be05-cdf9d27a2ffd"
+          }
+        }
+      ],
+      "nodes": [
+        {
+          "id": "media-5b887843-c8f",
+          "type": "media",
+          "content": {
+            "en": "Your media",
+            "tr": "Görselin"
+          },
+          "layout": {
+            "x": 16,
+            "y": 18,
+            "width": 68,
+            "height": 64
+          },
+          "timing": {
+            "sentenceId": "scene-c64fff73-201-sentence-1"
+          },
+          "style": {
+            "fontSize": 30,
+            "fontWeight": 500,
+            "align": "left"
+          },
+          "animation": {
+            "enter": "fade",
+            "delay": 0
+          },
+          "assetId": "media-eb8532cb-a42f-43fd-b146-235e8c9e333d",
+          "overrides": {
+            "16:9": {
+              "layout": {
+                "x": 12,
+                "y": 12,
+                "width": 76,
+                "height": 65
+              },
+              "protected": true
+            }
+          }
+        },
+        {
+          "id": "layer-36606433-001",
+          "type": "caption",
+          "content": {
+            "en": "Plant a seed. Share the work.",
+            "tr": "Bir tohum ek. Emeğini paylaş."
+          },
+          "layout": {
+            "x": 12,
+            "y": 78,
+            "width": 76,
+            "height": 10
+          },
+          "timing": {
+            "sentenceId": "scene-c64fff73-201-sentence-1"
+          },
+          "style": {
+            "fontSize": 36,
+            "fontWeight": 500,
+            "align": "left"
+          },
+          "animation": {
+            "enter": "rise",
+            "delay": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "scene-60663e28-2e4",
+      "name": "A shared story",
+      "kind": "quote",
+      "theme": "brand",
+      "sentences": [
+        {
+          "id": "scene-60663e28-2e4-sentence-1",
+          "text": {
+            "en": "",
+            "tr": ""
+          },
+          "duration": {
+            "en": 3,
+            "tr": 4
+          }
+        }
+      ],
+      "nodes": [
+        {
+          "id": "scene-60663e28-2e4-quote",
+          "type": "text",
+          "content": {
+            "en": "Small spaces.\nShared possibilities.",
+            "tr": "Küçük alanlar.\nOrtak umutlar."
+          },
+          "layout": {
+            "x": 12,
+            "y": 25,
+            "width": 76,
+            "height": 35
+          },
+          "timing": {
+            "sentenceId": "scene-60663e28-2e4-sentence-1"
+          },
+          "style": {
+            "fontSize": 72,
+            "fontWeight": 700,
+            "align": "left"
+          },
+          "animation": {
+            "enter": "rise",
+            "delay": 0
+          },
+          "overrides": {
+            "16:9": {
+              "layout": {
+                "x": 12,
+                "y": 25,
+                "width": 76,
+                "height": 35
+              },
+              "protected": false
+            },
+            "9:16": {
+              "layout": {
+                "x": 10,
+                "y": 25,
+                "width": 80,
+                "height": 35
+              },
+              "protected": false
+            }
+          }
+        },
+        {
+          "id": "scene-60663e28-2e4-attribution",
+          "type": "caption",
+          "content": {
+            "en": "A neighborhood grows together",
+            "tr": "Bir mahalle birlikte büyür"
+          },
+          "layout": {
+            "x": 12,
+            "y": 70,
+            "width": 76,
+            "height": 9
+          },
+          "timing": {
+            "sentenceId": "scene-60663e28-2e4-sentence-1"
+          },
+          "style": {
+            "fontSize": 30,
+            "fontWeight": 500,
+            "align": "left"
+          },
+          "animation": {
+            "enter": "rise",
+            "delay": 0.3
+          },
+          "overrides": {
+            "16:9": {
+              "layout": {
+                "x": 12,
+                "y": 70,
+                "width": 76,
+                "height": 9
+              },
+              "protected": false
+            },
+            "9:16": {
+              "layout": {
+                "x": 10,
+                "y": 68,
+                "width": 80,
+                "height": 10
+              },
+              "protected": false
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "scene-c4c44a86-53e",
+      "name": "Join the garden",
+      "kind": "closing",
+      "theme": "brand",
+      "sentences": [
+        {
+          "id": "scene-c4c44a86-53e-sentence-1",
+          "text": {
+            "en": "",
+            "tr": ""
+          },
+          "duration": {
+            "en": 3,
+            "tr": 4
+          }
+        }
+      ],
+      "nodes": [
+        {
+          "id": "scene-c4c44a86-53e-headline",
+          "type": "text",
+          "content": {
+            "en": "Bring your curiosity.",
+            "tr": "Merakını yanında getir."
+          },
+          "layout": {
+            "x": 12,
+            "y": 25,
+            "width": 76,
+            "height": 28
+          },
+          "timing": {
+            "sentenceId": "scene-c4c44a86-53e-sentence-1"
+          },
+          "style": {
+            "fontSize": 76,
+            "fontWeight": 700,
+            "align": "left"
+          },
+          "animation": {
+            "enter": "rise",
+            "delay": 0
+          },
+          "overrides": {
+            "16:9": {
+              "layout": {
+                "x": 12,
+                "y": 25,
+                "width": 76,
+                "height": 28
+              },
+              "protected": false
+            },
+            "9:16": {
+              "layout": {
+                "x": 10,
+                "y": 27,
+                "width": 80,
+                "height": 28
+              },
+              "protected": false
+            }
+          }
+        },
+        {
+          "id": "scene-c4c44a86-53e-cta",
+          "type": "cta",
+          "content": {
+            "en": "Grow with us",
+            "tr": "Birlikte büyütelim"
+          },
+          "layout": {
+            "x": 24,
+            "y": 65,
+            "width": 52,
+            "height": 13
+          },
+          "timing": {
+            "sentenceId": "scene-c4c44a86-53e-sentence-1",
+            "start": 0.2
+          },
+          "style": {
+            "fontSize": 32,
+            "fontWeight": 500,
+            "align": "left"
+          },
+          "animation": {
+            "enter": "slide",
+            "delay": 0.3
+          },
+          "overrides": {
+            "16:9": {
+              "layout": {
+                "x": 24,
+                "y": 65,
+                "width": 52,
+                "height": 13
+              },
+              "protected": false
+            },
+            "9:16": {
+              "layout": {
+                "x": 15,
+                "y": 65,
+                "width": 70,
+                "height": 12
+              },
+              "protected": false
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

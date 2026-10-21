@@ -1,0 +1,137 @@
+{
+  "verifiedAt": "2026-10-21T23:07:03.928Z",
+  "provider": "claude-cli",
+  "realProviderCall": true,
+  "checks": {
+    "createdNewScene": true,
+    "existingProtectedSceneUnchanged": true,
+    "validLocalizedStructure": true,
+    "explicitApply": true
+  },
+  "proposal": {
+    "id": "aa94b44a-a0d2-4a26-8bc4-558fd47ada0c",
+    "baseRevision": 0,
+    "summary": "I added one closing scene, \"Garden invitation\" (id garden-invitation, kind custom), right after the existing Title scene. I didn't change anything else: the Title scene, brand and Manrope font stay as they were. One thing to check: the Title scene itself isn't about a garden. Its text is \"Make your next idea move.\" Only the project name, \"A garden, together\", mentions a garden, so this closing scene is the only garden content.\n\n- **Narration:** one new sentence, \"Come grow with us in the community garden.\" / \"Topluluk bahçesinde bizimle birlikte büyü.\" It runs 3 s in English and 3.5 s in Turkish.\n- **Invitation:** \"Join us in the garden.\" / \"Bahçede bize katıl.\" It's large bold text that rises in right away.\n- **Supporting line (no date):** \"Bring your hands, your seeds and your neighbours.\" / \"Ellerini, tohumlarını ve komşularını getir.\" It's smaller text that rises in 0.3 s later, leaving plenty of time to read it in both languages.\n- **Layouts:** in landscape and portrait the two lines are stacked with a gap and never overlap. Neither is locked, so you can still move them.\n\nThe scene uses no media.",
+    "operations": [
+      {
+        "type": "add-scene",
+        "index": 1,
+        "scene": {
+          "id": "garden-invitation",
+          "name": "Garden invitation",
+          "kind": "custom",
+          "theme": "brand",
+          "sentences": [
+            {
+              "id": "garden-invitation-sentence-1",
+              "text": {
+                "en": "Come grow with us in the community garden.",
+                "tr": "Topluluk bahçesinde bizimle birlikte büyü."
+              },
+              "duration": {
+                "en": 3,
+                "tr": 3.5
+              }
+            }
+          ],
+          "nodes": [
+            {
+              "id": "garden-invitation-headline",
+              "type": "text",
+              "role": "headline",
+              "content": {
+                "en": "Join us in the garden.",
+                "tr": "Bahçede bize katıl."
+              },
+              "layout": {
+                "x": 10,
+                "y": 28,
+                "width": 80,
+                "height": 24
+              },
+              "timing": {
+                "sentenceId": "garden-invitation-sentence-1"
+              },
+              "style": {
+                "fontSize": 80,
+                "fontWeight": 700,
+                "align": "left"
+              },
+              "animation": {
+                "enter": "rise",
+                "delay": 0
+              },
+              "overrides": {
+                "16:9": {
+                  "layout": {
+                    "x": 10,
+                    "y": 28,
+                    "width": 80,
+                    "height": 24
+                  },
+                  "protected": false
+                },
+                "9:16": {
+                  "layout": {
+                    "x": 9,
+                    "y": 28,
+                    "width": 82,
+                    "height": 24
+                  },
+                  "protected": false
+                }
+              }
+            },
+            {
+              "id": "garden-invitation-body",
+              "type": "text",
+              "role": "body",
+              "content": {
+                "en": "Bring your hands, your seeds and your neighbours.",
+                "tr": "Ellerini, tohumlarını ve komşularını getir."
+              },
+              "layout": {
+                "x": 10,
+                "y": 60,
+                "width": 76,
+                "height": 13
+              },
+              "timing": {
+                "sentenceId": "garden-invitation-sentence-1"
+              },
+              "style": {
+                "fontSize": 36,
+                "fontWeight": 500,
+                "align": "left"
+              },
+              "animation": {
+                "enter": "rise",
+                "delay": 0.3
+              },
+              "overrides": {
+                "16:9": {
+                  "layout": {
+                    "x": 10,
+                    "y": 60,
+                    "width": 76,
+                    "height": 13
+                  },
+                  "protected": false
+                },
+                "9:16": {
+                  "layout": {
+                    "x": 9,
+                    "y": 58,
+                    "width": 82,
+                    "height": 15
+                  },
+                  "protected": false
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

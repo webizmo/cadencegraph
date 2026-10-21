@@ -6,6 +6,7 @@ import type {
   MotionNode,
   Operation,
   Project,
+  Scene,
   Transaction,
   TransactionResult,
 } from "./types";
@@ -17,6 +18,7 @@ import {
   parseProject,
   validateProject,
 } from "./validation";
+import { nestedId } from "./ids";
 
 const operationKeys: Record<string, string[]> = {
   "set-text": ["type", "nodeId", "locale", "text"],
@@ -29,8 +31,112 @@ const operationKeys: Record<string, string[]> = {
   "add-asset": ["type", "asset"],
   "add-node": ["type", "sceneId", "node"],
   "remove-node": ["type", "nodeId"],
+  "add-scene": ["type", "scene", "index"],
+  "remove-scene": ["type", "sceneId"],
+  "move-scene": ["type", "sceneId", "index"],
+  "set-scene": ["type", "sceneId", "name", "theme"],
+  "set-project-name": ["type", "name"],
+  "duplicate-scene": ["type", "sceneId", "newId"],
+  "duplicate-node": ["type", "nodeId", "newId"],
+  "move-node": ["type", "nodeId", "index"],
+  "set-node-style": ["type", "nodeId", "style"],
+  "set-node-animation": ["type", "nodeId", "animation"],
+  "set-node-timing": ["type", "nodeId", "timing"],
+  "remove-sentence-audio": ["type", "sentenceId", "locale"],
   "set-protection": ["type", "nodeId", "ratio", "protected"],
 };
+
+/** Reuse the project schema for nested operation payloads. Existing graph references
+ * are represented by temporary assets/anchors and checked against the real graph at commit. */
+function validateInsertedContent(
+  value: Record<string, unknown>,
+  kind: "node" | "scene",
+) {
+  const occupied = new Set<string>();
+  const collect = (item: unknown) => {
+    if (!item || typeof item !== "object") return;
+    for (const [key, child] of Object.entries(item)) {
+      if (key === "id" && typeof child === "string") occupied.add(child);
+      collect(child);
+    }
+  };
+  collect(value);
+  const unique = (base: string) => {
+    let id = base;
+    while (occupied.has(id)) id += "-x";
+    occupied.add(id);
+    return id;
+  };
+  const localizedSource =
+    kind === "node"
+      ? value.content
+      : Array.isArray(value.sentences) && isRecord(value.sentences[0])
+        ? value.sentences[0].text
+        : undefined;
+  const locales = isRecord(localizedSource)
+    ? Object.keys(localizedSource)
+    : ["en"];
+  const emptyText = Object.fromEntries(locales.map((locale) => [locale, ""]));
+  const assets = new Map<string, Asset>();
+  const reference = (id: unknown, type: "image" | "audio") => {
+    if (typeof id === "string")
+      assets.set(id, { id, type, src: "assets/validation-placeholder" });
+  };
+  const nodes =
+    kind === "node" ? [value] : Array.isArray(value.nodes) ? value.nodes : [];
+  const sentences =
+    kind === "scene" && Array.isArray(value.sentences) ? value.sentences : [];
+  for (const node of nodes)
+    if (isRecord(node)) reference(node.assetId, "image");
+  for (const sentence of sentences)
+    if (isRecord(sentence) && isRecord(sentence.audioAssetId))
+      for (const id of Object.values(sentence.audioAssetId))
+        reference(id, "audio");
+  const anchor =
+    isRecord(value.timing) && typeof value.timing.sentenceId === "string"
+      ? value.timing.sentenceId
+      : unique("operation-anchor");
+  occupied.add(anchor);
+  for (const id of assets.keys()) occupied.add(id);
+  const scene =
+    kind === "scene"
+      ? value
+      : {
+          id: unique("operation-scene"),
+          name: "Operation validation",
+          kind: "blank",
+          sentences: [
+            {
+              id: anchor,
+              text: emptyText,
+              duration: Object.fromEntries(
+                locales.map((locale) => [locale, 120]),
+              ),
+            },
+          ],
+          nodes: [value],
+        };
+  const issues = validateProject({
+    schemaVersion: 1,
+    id: unique("operation-project"),
+    name: "Operation validation",
+    revision: 0,
+    locales,
+    ratios: ["16:9", "9:16"],
+    fps: 30,
+    brand: {
+      name: "Validation",
+      accent: "#fff",
+      background: "#000",
+      foreground: "#fff",
+      fontFamily: "Arial",
+    },
+    assets: [...assets.values()],
+    scenes: [scene],
+  });
+  if (issues.length)
+    throw new Error(issues.map((issue) => issue.message).join(" "));
+}
 
 /** Parse proposals from remote models without trusting a TypeScript assertion. */
 export function parseOperations(value: unknown): Operation[] {
@@ -52,12 +158,53 @@ export function parseOperations(value: unknown): Operation[] {
     const type = obj.type as string;
     for (const key of Object.keys(obj))
       if (!operationKeys[type].includes(key)) fail(`Unknown field ${key}.`);
-    for (const key of ["nodeId", "sentenceId", "sceneId", "locale"])
+    for (const key of ["nodeId", "sentenceId", "sceneId", "newId", "locale"])
       if (
         operationKeys[type].includes(key) &&
         (typeof obj[key] !== "string" || !(obj[key] as string).trim())
       )
         fail(`${key} is required.`);
+    for (const key of ["nodeId", "sentenceId", "sceneId", "newId"])
+      if (
+        operationKeys[type].includes(key) &&
+        !/^[a-zA-Z][a-zA-Z0-9_.-]{0,95}$/.test(obj[key] as string)
+      )
+        fail(`${key} must be a valid identifier.`);
+    if (
+      operationKeys[type].includes("locale") &&
+      !/^[a-z]{2,3}(?:-[A-Za-z]{2,8})?$/.test(obj.locale as string)
+    )
+      fail("locale must be a valid locale code.");
+    if (
+      ["move-node", "move-scene"].includes(type) ||
+      (type === "add-scene" && obj.index !== undefined)
+    )
+      if (
+        !Number.isSafeInteger(obj.index) ||
+        (obj.index as number) < 0 ||
+        (obj.index as number) > 500
+      )
+        fail("index must be a non-negative integer in range.");
+    if (
+      type === "set-project-name" ||
+      (type === "set-scene" && obj.name !== undefined)
+    )
+      if (
+        typeof obj.name !== "string" ||
+        !obj.name.trim() ||
+        obj.name.length > 200
+      )
+        fail("name must be 1–200 characters.");
+    if (type === "set-scene") {
+      if (obj.name === undefined && obj.theme === undefined)
+        fail("Provide a scene name or theme.");
+      if (
+        obj.theme !== undefined &&
+        obj.theme !== "brand" &&
+        obj.theme !== "inverted"
+      )
+        fail("theme must be brand or inverted.");
+    }
     if (
       ["set-text", "set-sentence-text"].includes(type) &&
       (typeof obj.text !== "string" || obj.text.length > 4000)
@@ -110,8 +257,42 @@ export function parseOperations(value: unknown): Operation[] {
         if (!["id", "type", "src", "name", "license"].includes(key))
           fail(`Unknown asset field ${key}.`);
     }
-    if (type === "add-node" && !isRecord(obj.node))
-      fail("node must be an object.");
+    if (type === "add-node" || type === "add-scene") {
+      const field = type === "add-node" ? "node" : "scene";
+      if (!isRecord(obj[field])) fail(`${field} must be an object.`);
+      validateInsertedContent(obj[field] as Record<string, unknown>, field);
+    }
+    if (
+      ["set-node-style", "set-node-animation", "set-node-timing"].includes(type)
+    ) {
+      const field =
+        type === "set-node-style"
+          ? "style"
+          : type === "set-node-animation"
+            ? "animation"
+            : "timing";
+      if (
+        !(field === "animation" && obj[field] === undefined) &&
+        !isRecord(obj[field])
+      )
+        fail(`${field} must be an object.`);
+      validateInsertedContent(
+        {
+          id: obj.nodeId,
+          type: "text",
+          content: { en: "" },
+          layout: { x: 0, y: 0, width: 50, height: 50 },
+          timing: {
+            sentenceId:
+              obj.nodeId === "operation-anchor"
+                ? "operation-anchor-alternate"
+                : "operation-anchor",
+          },
+          ...(obj[field] === undefined ? {} : { [field]: obj[field] }),
+        },
+        "node",
+      );
+    }
   });
   return structuredClone(value) as Operation[];
 }
@@ -186,6 +367,8 @@ export function applyTransaction(
   const project = structuredClone(input);
   const conflicts: Conflict[] = [];
   const changes: Change[] = [];
+  const hasProtection = (node: MotionNode) =>
+    Object.values(node.overrides ?? {}).some((override) => override?.protected);
   const sameAsset = (a: Asset, b: Asset) =>
     ["id", "type", "src", "name", "license"].every(
       (key) => a[key as keyof Asset] === b[key as keyof Asset],
@@ -227,6 +410,161 @@ export function applyTransaction(
       ratios: [...project.ratios],
     };
     switch (operation.type) {
+      case "set-project-name":
+        project.name = operation.name;
+        change.description = `Renamed project to ${operation.name}.`;
+        break;
+      case "add-scene": {
+        const index = operation.index ?? project.scenes.length;
+        if (index > project.scenes.length) {
+          conflict(
+            "invalid-operation",
+            "Scene insertion index is outside the scene list.",
+          );
+          return;
+        }
+        if (
+          transaction.actor === "ai" &&
+          operation.scene.nodes.some(hasProtection)
+        ) {
+          conflict(
+            "protected-layout",
+            "AI-created scenes cannot establish manual protection.",
+          );
+          return;
+        }
+        project.scenes.splice(index, 0, structuredClone(operation.scene));
+        change.target = operation.scene.id;
+        change.description = `Added scene ${operation.scene.name} at position ${index + 1}.`;
+        break;
+      }
+      case "set-scene":
+      case "remove-scene":
+      case "move-scene":
+      case "duplicate-scene": {
+        const sourceIndex = project.scenes.findIndex(
+          (item) => item.id === operation.sceneId,
+        );
+        if (sourceIndex < 0) {
+          conflict("not-found", `Scene ${operation.sceneId} does not exist.`);
+          return;
+        }
+        const source = project.scenes[sourceIndex];
+        change.target = source.id;
+        if (operation.type === "set-scene") {
+          if (operation.name !== undefined) source.name = operation.name;
+          if (operation.theme !== undefined) source.theme = operation.theme;
+          change.description = `Updated scene ${source.name}.`;
+        } else if (operation.type === "remove-scene") {
+          if (transaction.actor === "ai" && source.nodes.some(hasProtection)) {
+            conflict(
+              "protected-layout",
+              `Scene ${source.id} contains protected manual layout and cannot be removed by AI.`,
+            );
+            return;
+          }
+          if (project.scenes.length === 1) {
+            conflict(
+              "invalid-operation",
+              "A project must retain at least one scene.",
+            );
+            return;
+          }
+          project.scenes.splice(sourceIndex, 1);
+          change.description = `Removed scene ${source.name}.`;
+        } else if (operation.type === "move-scene") {
+          if (operation.index >= project.scenes.length) {
+            conflict(
+              "invalid-operation",
+              "Scene destination index is outside the scene list.",
+            );
+            return;
+          }
+          project.scenes.splice(sourceIndex, 1);
+          project.scenes.splice(operation.index, 0, source);
+          change.description = `Moved scene ${source.name} to position ${operation.index + 1}.`;
+        } else {
+          if (transaction.actor === "ai" && source.nodes.some(hasProtection)) {
+            conflict(
+              "protected-layout",
+              "AI cannot duplicate a scene containing protected manual layout.",
+            );
+            return;
+          }
+          const copy: Scene = structuredClone(source);
+          copy.id = operation.newId;
+          copy.name = `${source.name.slice(0, 195)} copy`;
+          const sentenceIds = new Map(
+            copy.sentences.map((sentence, index) => [
+              sentence.id,
+              nestedId(copy.id, `sentence-${index + 1}`),
+            ]),
+          );
+          copy.sentences.forEach((sentence) => {
+            sentence.id = sentenceIds.get(sentence.id)!;
+          });
+          copy.nodes.forEach((item, index) => {
+            item.id = nestedId(copy.id, `node-${index + 1}`);
+            item.timing.sentenceId = sentenceIds.get(item.timing.sentenceId)!;
+          });
+          project.scenes.splice(sourceIndex + 1, 0, copy);
+          change.target = copy.id;
+          change.description = `Duplicated scene ${source.name} with fresh scene, sentence and node identities.`;
+        }
+        break;
+      }
+      case "duplicate-node": {
+        if (transaction.actor === "ai" && hasProtection(node!)) {
+          conflict(
+            "protected-layout",
+            "AI cannot duplicate a node with protected manual layout.",
+            nodeId,
+          );
+          return;
+        }
+        const copy = structuredClone(node!);
+        copy.id = operation.newId;
+        scene!.nodes.splice(scene!.nodes.indexOf(node!) + 1, 0, copy);
+        change.target = copy.id;
+        change.description = `Duplicated ${nodeId} with a fresh identity.`;
+        break;
+      }
+      case "move-node": {
+        if (transaction.actor === "ai" && hasProtection(node!)) {
+          conflict(
+            "protected-layout",
+            "AI cannot reorder a node with protected manual layout.",
+            nodeId,
+          );
+          return;
+        }
+        if (operation.index >= scene!.nodes.length) {
+          conflict(
+            "invalid-operation",
+            "Layer destination index is outside the scene's layer list.",
+            nodeId,
+          );
+          return;
+        }
+        scene!.nodes.splice(scene!.nodes.indexOf(node!), 1);
+        scene!.nodes.splice(operation.index, 0, node!);
+        change.description = `Moved ${nodeId} to layer ${operation.index + 1}.`;
+        break;
+      }
+      case "set-node-style":
+        node!.style = structuredClone(operation.style);
+        change.description = `Updated text style on ${nodeId}.`;
+        break;
+      case "set-node-animation":
+        if (operation.animation)
+          node!.animation = structuredClone(operation.animation);
+        else delete node!.animation;
+        change.description = `${operation.animation ? "Updated" : "Reset default"} entrance animation on ${nodeId}.`;
+        break;
+      case "set-node-timing":
+        node!.timing = structuredClone(operation.timing);
+        change.description = `Updated sentence-relative timing on ${nodeId}.`;
+        break;
       case "set-text":
         node!.content[operation.locale] = operation.text;
         change.locales = [operation.locale];
@@ -360,6 +698,34 @@ export function applyTransaction(
         change.target = sentence.id;
         change.locales = [operation.locale];
         change.description = `Replaced ${operation.locale} narration and retimed ${sentence.id} to ${operation.duration}s.`;
+        break;
+      }
+      case "remove-sentence-audio": {
+        if (transaction.actor !== "human") {
+          conflict(
+            "invalid-operation",
+            "Removing narration requires a human media selection.",
+          );
+          return;
+        }
+        const sentence = project.scenes
+          .flatMap((item) => item.sentences)
+          .find((item) => item.id === operation.sentenceId);
+        if (!sentence) {
+          conflict(
+            "not-found",
+            `Sentence ${operation.sentenceId} does not exist.`,
+          );
+          return;
+        }
+        if (sentence.audioAssetId) {
+          delete sentence.audioAssetId[operation.locale];
+          if (!Object.keys(sentence.audioAssetId).length)
+            delete sentence.audioAssetId;
+        }
+        change.target = sentence.id;
+        change.locales = [operation.locale];
+        change.description = `Removed ${operation.locale} narration from ${sentence.id}; duration and reusable media preserved.`;
         break;
       }
       case "set-node-media": {

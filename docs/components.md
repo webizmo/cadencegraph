@@ -11,6 +11,8 @@ The built-in examples live in `src/render/registry.tsx`:
 | `variant-fan` | Four aspect/language cards, staggered entrances and orbit |
 | `metric-bars` | Minimal deterministic data graphic to extend |
 
+Alpha.5's blank, title, quote, three-point and closing scene designs are **data factories**, not registered components. They create ordinary editable text/card/caption/CTA nodes through `src/core/authoring.ts`; the studio can add, duplicate, reorder and delete these layers. Choose a blank scene when no predefined arrangement is wanted. Use a registered component when a visual needs custom deterministic rendering logic that the existing node types cannot express.
+
 ## Add a component
 
 Create a file under `src/render/` and import it once from the application before the first composition mounts. Register it with a stable lowercase name. Do not re-register inside a React render or effect.
@@ -57,6 +59,8 @@ Reference it from an ordinary versioned node:
 
 `sentenceId` must already exist in that scene and all project locales must appear in `content`. Add a portrait override using the same node ID if the layout needs different proportions. Set `protected: true` on a manual override to make AI layout changes conflict rather than silently move it. Nodes are added through core transactions (`add-node`) so schema checks, revision tracking and undo remain active.
 
+Scene duplication remaps nested node/sentence identities and timing references while retaining the component name, JSON props and asset references. Do not hard-code a parent scene/node ID inside a component; receive configurable data through props. A component's own visual text is defined by its renderer, so editing the node's semantic description does not automatically rewrite internal SVG/HTML labels. Generic text-style controls apply to the standard text/card/caption/CTA renderers; a custom component owns its internal styling.
+
 ## Contract
 
 - `time`: seconds elapsed since this node's compiled start; safe for backward or repeated seeks.
@@ -68,5 +72,7 @@ Reference it from an ordinary versioned node:
 Use the size of the containing node. SVG `viewBox` makes aspect-aware graphics straightforward; percent positioning and container query units adapt HTML. Avoid `Date.now`, `Math.random`, `setInterval`, CSS transitions, wall-clock animation, asynchronous layout, web fonts, and external fetches. These make frame seeking diverge from interactive preview.
 
 Components must not mount their own video or audio tags: use project media nodes and sentence audio so the shared media clock owns seeking, playback and export. An unknown component name is visible as a missing-component tile and blocks export. Registration rejects duplicate names.
+
+Use `kind: "custom"` (or another ordinary kind) for new scenes. `intro`, `features` and `outro` retain the original demo's decoration for compatibility. The component and scene node set should supply the artwork for new films; the renderer does not inject that legacy artwork into blank/template/custom scenes.
 
 Run `npm run check`, inspect both aspect ratios, and use a real render to validate a new component. Core schema checks and rendered text measurements cannot guarantee that internal SVG labels are legible or that a custom visual is artistically balanced. Review the exported frames at delivery size.

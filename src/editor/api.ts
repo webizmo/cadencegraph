@@ -72,7 +72,17 @@ export const describeOperation = (operation: Operation) => {
     return `Replace media · ${operation.nodeId} · ${operation.asset.name || operation.asset.id}`;
   if (operation.type === "add-asset")
     return `Add media · ${operation.asset.name || operation.asset.id}`;
-  return `Layout protection · ${operation.nodeId}`;
+  if (operation.type === "set-protection")
+    return `Layout protection · ${operation.nodeId}`;
+  if (operation.type === "add-scene")
+    return `Add scene · ${operation.scene.name}`;
+  if (operation.type === "set-project-name")
+    return `Project name · ${operation.name}`;
+  if ("sceneId" in operation)
+    return `${operation.type.replaceAll("-", " ")} · ${operation.sceneId}`;
+  if ("nodeId" in operation)
+    return `${operation.type.replaceAll("-", " ")} · ${operation.nodeId}`;
+  return `${operation.type.replaceAll("-", " ")} · ${operation.sentenceId}`;
 };
 
 export async function uploadMedia(

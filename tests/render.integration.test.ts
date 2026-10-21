@@ -1,5 +1,5 @@
 import { afterAll, describe, expect, test } from "vitest";
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { randomUUID } from "node:crypto";
@@ -7,6 +7,7 @@ import { chromium } from "playwright";
 import { createServer } from "vite";
 import { renderProject } from "../scripts/render";
 import { synthesizeScore } from "../scripts/generate-audio";
+import { createBlankProject, createNode } from "../src/core";
 import { demoProject } from "../examples/demo.ts";
 
 const work = await mkdtemp(join(tmpdir(), "cadencegraph-render-test-"));
@@ -106,4 +107,67 @@ describe("real export contract", () => {
       await server.close();
     }
   });
+  test("short video holds its last decoded frame through repeated and reverse seeks", async () => {
+    const project = createBlankProject("short-video");
+    const scene = project.scenes[0];
+    scene.sentences[0].duration = { en: 5, tr: 5 };
+    project.assets = [
+      { id: "clip", type: "video", src: "assets/demo/garden-motion.mp4" },
+    ];
+    scene.nodes = [
+      createNode(
+        "media",
+        "video-layer",
+        scene.sentences[0].id,
+        project.locales,
+        "clip",
+      ),
+    ];
+    const server = await createServer({
+      server: { host: "127.0.0.1", port: 0 },
+      logLevel: "error",
+    });
+    await server.listen();
+    const address = server.httpServer!.address();
+    if (!address || typeof address === "string") throw new Error("No address");
+    const browser = await chromium.launch({ headless: true });
+    try {
+      const page = await browser.newPage({
+        viewport: { width: 640, height: 360 },
+      });
+      await page.goto(`http://127.0.0.1:${address.port}/?render=1`, {
+        waitUntil: "networkidle",
+      });
+      await page.waitForFunction(() => !!window.__CADENCE_RENDER__);
+      await page.evaluate(
+        async (p) => window.__CADENCE_RENDER__!.setProject(p, "en", "16:9"),
+        project,
+      );
+      await page.evaluate(async () => window.__CADENCE_RENDER__!.seek(3.4));
+      const held = await page.screenshot();
+      await page.evaluate(async () => window.__CADENCE_RENDER__!.seek(4));
+      expect((await page.screenshot()).equals(held)).toBe(true);
+      expect(
+        await page.evaluate(() => window.__CADENCE_RENDER__!.inspect().issues),
+      ).toEqual([]);
+      await page.evaluate(async () => window.__CADENCE_RENDER__!.seek(1));
+      expect((await page.screenshot()).equals(held)).toBe(false);
+      await page.evaluate(async () => window.__CADENCE_RENDER__!.seek(3.4));
+      const repeated = await page.screenshot();
+      if (!repeated.equals(held)) {
+        await mkdir("work/seek-debug", { recursive: true });
+        await writeFile("work/seek-debug/held.png", held);
+        await writeFile("work/seek-debug/repeated.png", repeated);
+      }
+      expect(repeated.equals(held)).toBe(true);
+      expect(
+        await page
+          .locator("video")
+          .evaluate((v) => (v as HTMLVideoElement).seeking),
+      ).toBe(false);
+    } finally {
+      await browser.close();
+      await server.close();
+    }
+  }, 30000);
 });

@@ -1,0 +1,124 @@
+{
+  "verifiedAt": "2026-10-21T23:30:48.919Z",
+  "browser": "Playwright Chromium",
+  "browserPlugin": "not available; repository Playwright workflow used",
+  "url": "http://127.0.0.1:5183",
+  "pageTitle": "CadenceGraph — Motion, with meaning.",
+  "viewports": [
+    {
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "width": 390,
+      "height": 844
+    }
+  ],
+  "source": "examples/community-garden.cadence.json",
+  "sourceSha256": "4058bdab1640ee05a0db6e578d74a8e7f1f7da9de5a130de1b9924d6d87201e8",
+  "sceneNames": [
+    "A seed of possibility",
+    "Room to grow",
+    "A shared story",
+    "Join the garden"
+  ],
+  "checks": {
+    "createdFromBlankUsingUI": true,
+    "originalBilingualContent": true,
+    "imageAndVideoUploaded": true,
+    "narrationUploaded": true,
+    "sceneDuplicateDeleteReorder": true,
+    "invalidMediaRecovered": true,
+    "savedReloadedAndExported": true,
+    "mobileNoHorizontalOverflow": true,
+    "noFrameworkOverlay": true,
+    "noRuntimeErrors": true
+  },
+  "expectedBadUploadConsoleErrors": 1,
+  "studioExport": {
+    "file": "garden-studio-export.mp4",
+    "realUiAndApi": true,
+    "bytes": 519718,
+    "sha256": "9850bebdb13ac51a02b8ed34a697dfd7da7d30fcee048f4d6d9f59bf33e48184",
+    "locale": "en",
+    "ratio": "16:9",
+    "fps": 30,
+    "decodedWithoutErrors": true,
+    "width": 1280,
+    "height": 720,
+    "duration": 12,
+    "videoCodec": "h264",
+    "audioCodec": "aac"
+  },
+  "outputs": [
+    {
+      "filename": "garden-en-16x9.mp4",
+      "sha256": "9c0293bcefcc6fe187741e448dadb9d91054dbb7cb72fb916118970d390edd95",
+      "bytes": 516537,
+      "width": 1280,
+      "height": 720,
+      "duration": 12,
+      "frames": 288,
+      "audio": {
+        "score": true,
+        "scoreGain": 0.55,
+        "sentenceTracks": 1,
+        "note": "Original synthesized score mixed with user-supplied sentence audio, fitted to sentence duration."
+      },
+      "inspections": 25,
+      "decodedWithoutErrors": true
+    },
+    {
+      "filename": "garden-en-9x16.mp4",
+      "sha256": "6d2352ca415e96deae07bc21a6bcc2740cbd5663b364059d2de54ddf8aeb2b0d",
+      "bytes": 512631,
+      "width": 720,
+      "height": 1280,
+      "duration": 12,
+      "frames": 288,
+      "audio": {
+        "score": true,
+        "scoreGain": 0.55,
+        "sentenceTracks": 1,
+        "note": "Original synthesized score mixed with user-supplied sentence audio, fitted to sentence duration."
+      },
+      "inspections": 25,
+      "decodedWithoutErrors": true
+    },
+    {
+      "filename": "garden-tr-16x9.mp4",
+      "sha256": "f39954e362a041fde505ae9e4a0eb2ea70529c3d668a56897be214b5bd64c998",
+      "bytes": 569611,
+      "width": 1280,
+      "height": 720,
+      "duration": 15,
+      "frames": 360,
+      "audio": {
+        "score": true,
+        "scoreGain": 2.2,
+        "sentenceTracks": 0,
+        "note": "Original synthesized score. No spoken narration in this demo."
+      },
+      "inspections": 29,
+      "decodedWithoutErrors": true
+    },
+    {
+      "filename": "garden-tr-9x16.mp4",
+      "sha256": "afd9448055d3695e242d795f55206fecf87e44a3502599eacfc4bab97dc73eef",
+      "bytes": 566953,
+      "width": 720,
+      "height": 1280,
+      "duration": 15,
+      "frames": 360,
+      "audio": {
+        "score": true,
+        "scoreGain": 2.2,
+        "sentenceTracks": 0,
+        "note": "Original synthesized score. No spoken narration in this demo."
+      },
+      "inspections": 29,
+      "decodedWithoutErrors": true
+    }
+  ],
+  "mediaDecodeVerifiedAt": "2026-10-21T23:31:10.245Z"
+}
