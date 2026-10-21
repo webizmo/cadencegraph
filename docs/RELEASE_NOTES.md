@@ -1,4 +1,6 @@
-# v0.1.0-alpha.1
+# v0.1.0-alpha.2
+
+This revision normalizes source formatting for the CI style gate. Runtime behavior and the verified video assets are unchanged from alpha.1.
 
 CadenceGraph is a working local motion studio built around a versioned project shared by a human editor and Claude. A sentence change can retime one language without moving a protected portrait layout. Proposals are reviewed and atomically applied; conflicts and undo remain explicit.
 

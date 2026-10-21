@@ -60,12 +60,10 @@ export function createApp(options: {
     try {
       res.status(201).json(await storeMedia(req.body));
     } catch (error) {
-      res
-        .status(400)
-        .json({
-          error:
-            error instanceof Error ? error.message : "Unable to import media.",
-        });
+      res.status(400).json({
+        error:
+          error instanceof Error ? error.message : "Unable to import media.",
+      });
     }
   });
   app.use(express.json({ limit: "2mb" }));
@@ -101,22 +99,18 @@ export function createApp(options: {
       aiBusy = true;
       res.json(await (options.ai ?? propose)(project, prompt.trim()));
     } catch (error) {
-      res
-        .status(400)
-        .json({
-          error: error instanceof Error ? error.message : "Invalid request.",
-        });
+      res.status(400).json({
+        error: error instanceof Error ? error.message : "Invalid request.",
+      });
     } finally {
       aiBusy = false;
     }
   });
   app.post("/api/render", async (req, res) => {
     if (renderBusy) {
-      res
-        .status(429)
-        .json({
-          error: "An export is already running. Wait for it to finish.",
-        });
+      res.status(429).json({
+        error: "An export is already running. Wait for it to finish.",
+      });
       return;
     }
     try {
@@ -170,22 +164,18 @@ export function createApp(options: {
       })();
     } catch (error) {
       renderBusy = false;
-      res
-        .status(400)
-        .json({
-          error:
-            error instanceof Error ? error.message : "Invalid render request.",
-        });
+      res.status(400).json({
+        error:
+          error instanceof Error ? error.message : "Invalid render request.",
+      });
     }
   });
   app.get("/api/render/:id", (req, res) => {
     const job = jobs.get(req.params.id);
     if (!job)
-      res
-        .status(404)
-        .json({
-          error: "Export not found; jobs reset when the server restarts.",
-        });
+      res.status(404).json({
+        error: "Export not found; jobs reset when the server restarts.",
+      });
     else res.json(job);
   });
   app.use(
@@ -199,14 +189,12 @@ export function createApp(options: {
       res: express.Response,
       _next: express.NextFunction,
     ) => {
-      res
-        .status(400)
-        .json({
-          error:
-            error instanceof Error && error.message.includes("too large")
-              ? "Project exceeds the 2 MB limit."
-              : "Malformed JSON request.",
-        });
+      res.status(400).json({
+        error:
+          error instanceof Error && error.message.includes("too large")
+            ? "Project exceeds the 2 MB limit."
+            : "Malformed JSON request.",
+      });
     },
   );
   return app;

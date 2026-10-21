@@ -209,13 +209,11 @@ test("undo, redo, export, import and local reload preserve editable JSON", async
     findNode(exported, "intro-headline").overrides?.["16:9"]?.protected,
   ).toBe(true);
   expect(exported.revision).toBe(3);
-  await page
-    .getByLabel("Import project", { exact: true })
-    .setInputFiles({
-      name: "editable.cadence.json",
-      mimeType: "application/json",
-      buffer: Buffer.from(JSON.stringify(exported)),
-    });
+  await page.getByLabel("Import project", { exact: true }).setInputFiles({
+    name: "editable.cadence.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(exported)),
+  });
   await expect(page.getByRole("status")).toContainText(
     "Imported A little more possible",
   );
@@ -374,13 +372,11 @@ test("real image replacement preserves protected media identity and undo restore
     await route.fulfill({ response });
   });
   const png = generatedPng();
-  await page
-    .getByLabel("Replace layer media", { exact: true })
-    .setInputFiles({
-      name: "e2e-generated-mint.png",
-      mimeType: "image/png",
-      buffer: png,
-    });
+  await page.getByLabel("Replace layer media", { exact: true }).setInputFiles({
+    name: "e2e-generated-mint.png",
+    mimeType: "image/png",
+    buffer: png,
+  });
   await responseReceived;
   // A user can keep editing while an upload finishes. Its callback must use the latest graph.
   await editNumber(page, "Layer x", "11");
@@ -427,13 +423,11 @@ test("malformed import is rejected and adding a layer is a reversible edit", asy
 }) => {
   await load(page);
   const before = await savedProject(page);
-  await page
-    .getByLabel("Import project", { exact: true })
-    .setInputFiles({
-      name: "invalid.json",
-      mimeType: "application/json",
-      buffer: Buffer.from('{"schemaVersion":99}'),
-    });
+  await page.getByLabel("Import project", { exact: true }).setInputFiles({
+    name: "invalid.json",
+    mimeType: "application/json",
+    buffer: Buffer.from('{"schemaVersion":99}'),
+  });
   await expect(page.getByRole("status")).toContainText("Import failed");
   expect(await savedProject(page)).toEqual(before);
   await sceneRail(page)

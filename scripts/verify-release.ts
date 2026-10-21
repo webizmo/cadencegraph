@@ -126,7 +126,7 @@ await writeFile(
   JSON.stringify(
     {
       verifiedAt: new Date().toISOString(),
-      version: "0.1.0-alpha.1",
+      version: "0.1.0-alpha.2",
       unitAndIntegrationTests: unit?.numPassedTests ?? null,
       browserTests: e2e?.stats?.expected ?? null,
       dependencyAuditVulnerabilities:
