@@ -1,5 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
-import { readFile, mkdir } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import { deflateSync } from "node:zlib";
 import { demoProject } from "../../examples/demo";
 import type { Project, Operation } from "../../src/core";
@@ -452,7 +452,7 @@ for (const viewport of [
 ]) {
   test(`responsive studio at ${viewport.width}px has no page overflow or runtime errors`, async ({
     page,
-  }) => {
+  }, testInfo) => {
     await page.setViewportSize(viewport);
     const errors: string[] = [];
     page.on("pageerror", (error) => errors.push(error.message));
@@ -476,9 +476,8 @@ for (const viewport of [
     await page
       .getByRole("slider", { name: "Preview position" })
       .dispatchEvent("change");
-    await mkdir("docs/verification", { recursive: true });
     await page.screenshot({
-      path: `docs/verification/${viewport.name}.png`,
+      path: testInfo.outputPath(`${viewport.name}.png`),
       fullPage: true,
     });
     expect(errors).toEqual([]);

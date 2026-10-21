@@ -14,7 +14,7 @@ An open motion studio where people and Claude edit the same versioned project.
 
 Change a sentence. Switch language. Move a card for portrait. Ask Claude for a revision. The timing follows the sentence; your protected layout stays where you put it. Every AI proposal is inspectable before it becomes an edit.
 
-**Technical alpha — v0.1.0-alpha.2.** A working local editor and deterministic export pipeline for a deliberately bounded project format. This is not a replacement for every capability of a mature video editor.
+**Technical alpha — v0.1.0-alpha.3.** A working local editor and deterministic export pipeline for a deliberately bounded project format. This is not a replacement for every capability of a mature video editor.
 
 ## Run locally
 
@@ -52,7 +52,7 @@ The live-provider acceptance record is in [docs/verification/claude-live.json](d
 
 ## Real rendered demos
 
-The [alpha release](https://github.com/webizmo/cadencegraph/releases/tag/v0.1.0-alpha.2) includes four base MP4 files and four more after the five-revision scenario, plus posters and machine-readable render reports. They are generated from one source project, not screen recordings.
+The [alpha release](https://github.com/webizmo/cadencegraph/releases/tag/v0.1.0-alpha.3) includes four base MP4 files and four more after the five-revision scenario, plus posters and machine-readable render reports. They are generated from one source project, not screen recordings.
 
 | Variant | Frame size | Frame rate | Source |
 | --- | --- | --- | --- |

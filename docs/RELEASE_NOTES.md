@@ -1,6 +1,6 @@
-# v0.1.0-alpha.2
+# v0.1.0-alpha.3
 
-This revision normalizes source formatting for the CI style gate. Runtime behavior and the verified video assets are unchanged from alpha.1.
+This revision fixes a missing favicon request discovered during a fresh browser QA run and keeps responsive test screenshots in Playwright's test output rather than overwriting tracked verification images. The editor's film export and download controls were exercised in a separate browser session; the downloaded file was verified as a 19.5-second 1280×720 H.264/AAC MP4. The eight release videos are unchanged from alpha.2.
 
 CadenceGraph is a working local motion studio built around a versioned project shared by a human editor and Claude. A sentence change can retime one language without moving a protected portrait layout. Proposals are reviewed and atomically applied; conflicts and undo remain explicit.
 
