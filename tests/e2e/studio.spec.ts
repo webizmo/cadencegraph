@@ -444,6 +444,57 @@ test("malformed import is rejected and adding a layer is a reversible edit", asy
   );
 });
 
+test("download stays labeled with the exported variant after selection changes", async ({
+  page,
+}) => {
+  await load(page);
+  const requests: Array<{ locale: string; ratio: string }> = [];
+  await page.route(/\/api\/render(?:\/qa-\d+)?$/, async (route) => {
+    if (route.request().method() === "POST") {
+      const { locale, ratio } = route.request().postDataJSON();
+      requests.push({ locale, ratio });
+      await route.fulfill({
+        contentType: "application/json",
+        body: JSON.stringify({
+          id: `qa-${requests.length}`,
+          status: "queued",
+          progress: 0,
+        }),
+      });
+      return;
+    }
+    await route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({
+        id: `qa-${requests.length}`,
+        status: "complete",
+        progress: 100,
+        url: `/outputs/qa-${requests.length}.mp4`,
+      }),
+    });
+  });
+  await page.getByRole("button", { name: "Export film" }).click();
+  await expect(
+    page.getByRole("link", { name: "Download EN 16:9 MP4" }),
+  ).toBeVisible();
+  await page
+    .getByRole("combobox", { name: "Preview language" })
+    .selectOption("tr");
+  await page.getByRole("button", { name: "9:16", exact: true }).click();
+  await expect(page.getByText("TR · 9:16 · Revision 0")).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Download EN 16:9 MP4" }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Render this variant" }).click();
+  await expect(
+    page.getByRole("link", { name: "Download TR 9:16 MP4" }),
+  ).toBeVisible();
+  expect(requests).toEqual([
+    { locale: "en", ratio: "16:9" },
+    { locale: "tr", ratio: "9:16" },
+  ]);
+});
+
 for (const viewport of [
   { width: 1440, height: 1000, name: "studio-desktop" },
   { width: 1588, height: 992, name: "studio-wide" },

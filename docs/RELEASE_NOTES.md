@@ -1,6 +1,8 @@
-# v0.1.0-alpha.3
+# v0.1.0-alpha.4
 
-This revision fixes a missing favicon request discovered during a fresh browser QA run and keeps responsive test screenshots in Playwright's test output rather than overwriting tracked verification images. The editor's film export and download controls were exercised in a separate browser session; the downloaded file was verified as a 19.5-second 1280×720 H.264/AAC MP4. The eight release videos are unchanged from alpha.2.
+This revision keeps each MP4 download labeled with the language, ratio and project revision that produced it. Switching the preview to another variant no longer presents an earlier export as the selected output. A browser regression test covers exporting EN 16:9, switching to TR 9:16, and exporting the new variant. The eight release videos are unchanged from alpha.3.
+
+The preceding QA pass also fixed a missing favicon request and moved responsive test screenshots to Playwright's temporary output. The editor's film export and download controls produced a verified 19.5-second 1280×720 H.264/AAC MP4 in a separate browser session.
 
 CadenceGraph is a working local motion studio built around a versioned project shared by a human editor and Claude. A sentence change can retime one language without moving a protected portrait layout. Proposals are reviewed and atomically applied; conflicts and undo remain explicit.
 

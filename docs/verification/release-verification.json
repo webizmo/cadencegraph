@@ -1,8 +1,8 @@
 {
   "verifiedAt": "2026-10-21T22:29:13.134Z",
-  "version": "0.1.0-alpha.3",
+  "version": "0.1.0-alpha.4",
   "unitAndIntegrationTests": 63,
-  "browserTests": 12,
+  "browserTests": 13,
   "dependencyAuditVulnerabilities": 0,
   "outputs": [
     {

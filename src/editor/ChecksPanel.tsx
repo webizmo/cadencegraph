@@ -22,6 +22,11 @@ interface Props {
 }
 export function ChecksPanel({ project, locale, ratio, autoRender }: Props) {
   const [job, setJob] = useState<RenderJob | null>(null);
+  const [renderedFor, setRenderedFor] = useState<{
+    locale: string;
+    ratio: AspectRatio;
+    revision: number;
+  } | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const sourceIssues = validateProject(project);
@@ -56,6 +61,7 @@ export function ChecksPanel({ project, locale, ratio, autoRender }: Props) {
     setBusy(true);
     setError("");
     setJob(null);
+    setRenderedFor({ locale, ratio, revision: project.revision });
     try {
       setJob(await startRender(project, locale, ratio));
     } catch (error) {
@@ -159,6 +165,12 @@ export function ChecksPanel({ project, locale, ratio, autoRender }: Props) {
           )}{" "}
           {busy ? "Rendering…" : "Render this variant"}
         </button>
+        {renderedFor && (job || error) ? (
+          <p className="field-hint">
+            Export job: {renderedFor.locale.toUpperCase()} · {renderedFor.ratio}{" "}
+            · Revision {renderedFor.revision}
+          </p>
+        ) : null}
         {job ? (
           <div className="render-progress">
             <span>{job.status}</span>
@@ -180,7 +192,8 @@ export function ChecksPanel({ project, locale, ratio, autoRender }: Props) {
         ) : null}
         {complete && download ? (
           <a className="button full" href={download} download>
-            <Download size={15} /> Download MP4
+            <Download size={15} /> Download {renderedFor?.locale.toUpperCase()}{" "}
+            {renderedFor?.ratio} MP4
           </a>
         ) : null}
         {job?.error ? <div className="message error">{job.error}</div> : null}
