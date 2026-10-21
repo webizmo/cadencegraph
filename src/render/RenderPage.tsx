@@ -43,6 +43,10 @@ declare global {
   }
 }
 
+const settledVideoFrames = new WeakMap<
+  HTMLVideoElement,
+  { target: number; src: string }
+>();
 async function settleMedia() {
   await document.fonts.ready;
   await Promise.all(
@@ -53,32 +57,106 @@ async function settleMedia() {
       ...document.querySelectorAll<HTMLVideoElement>(
         "video[data-project-time]",
       ),
-    ].map(
-      (video) =>
-        new Promise<void>((resolve) => {
-          const target = Number(video.dataset.projectTime || "0");
-          if (
-            Math.abs(video.currentTime - target) < 0.015 &&
-            video.readyState >= 2
-          ) {
+    ].map(async (video) => {
+      if (video.readyState < 1 || !Number.isFinite(video.duration)) {
+        await new Promise<void>((resolve, reject) => {
+          const cleanup = () => {
+            clearTimeout(timer);
+            video.removeEventListener("loadedmetadata", ready);
+            video.removeEventListener("error", failed);
+          };
+          const ready = () => {
+            cleanup();
+            resolve();
+          };
+          const failed = () => {
+            cleanup();
+            reject(
+              new Error(
+                `Video metadata could not load: ${video.getAttribute("src")}`,
+              ),
+            );
+          };
+          const timer = setTimeout(failed, 5000);
+          video.addEventListener("loadedmetadata", ready, { once: true });
+          video.addEventListener("error", failed, { once: true });
+          if (video.error) failed();
+        });
+      }
+      return new Promise<void>((resolve, reject) => {
+        const requested = Number(video.dataset.projectTime || "0");
+        const target = Number.isFinite(video.duration)
+          ? Math.min(requested, Math.max(0, video.duration - 0.01))
+          : requested;
+        const verified = settledVideoFrames.get(video);
+        if (
+          verified?.src === video.currentSrc &&
+          verified.target === target &&
+          !video.seeking &&
+          Math.abs(video.currentTime - target) < 0.015 &&
+          video.readyState >= 2
+        ) {
+          resolve();
+          return;
+        }
+        let timeout: ReturnType<typeof setTimeout>;
+        let settled = false;
+        const cleanup = () => {
+          clearTimeout(timeout);
+          video.removeEventListener("seeked", done);
+          video.removeEventListener("loadeddata", done);
+          video.removeEventListener("error", done);
+        };
+        const done = () => {
+          if (settled) return;
+          if (video.error) {
+            settled = true;
+            cleanup();
             resolve();
             return;
           }
-          let timeout: ReturnType<typeof setTimeout>;
-          const done = () => {
-            clearTimeout(timeout);
-            video.removeEventListener("seeked", done);
-            video.removeEventListener("error", done);
-            resolve();
-          };
-          video.addEventListener("seeked", done, { once: true });
-          video.addEventListener("error", done, { once: true });
-          timeout = setTimeout(done, 3000);
-          video.currentTime = Number.isFinite(video.duration)
-            ? Math.min(target, Math.max(0, video.duration - 0.01))
-            : target;
-        }),
-    ),
+          if (
+            video.seeking ||
+            video.readyState < 2 ||
+            Math.abs(video.currentTime - target) > 0.015
+          )
+            return;
+          const canvas = video.parentElement?.querySelector<HTMLCanvasElement>(
+            "canvas[data-video-frame]",
+          );
+          const context = canvas?.getContext("2d");
+          if (!canvas || !context) {
+            settled = true;
+            cleanup();
+            reject(new Error("Video frame canvas is unavailable."));
+            return;
+          }
+          // drawImage reads the decoded frame at the playback position. Capturing
+          // this canvas avoids racing Chromium's asynchronous video compositor.
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          context.drawImage(video, 0, 0, canvas.width, canvas.height);
+          settled = true;
+          settledVideoFrames.set(video, { target, src: video.currentSrc });
+          cleanup();
+          resolve();
+        };
+        video.addEventListener("seeked", done);
+        video.addEventListener("loadeddata", done);
+        video.addEventListener("error", done);
+        timeout = setTimeout(() => {
+          if (settled) return;
+          settled = true;
+          cleanup();
+          reject(
+            new Error(
+              `Video did not settle at ${target.toFixed(3)}s: ${video.getAttribute("src")}`,
+            ),
+          );
+        }, 5000);
+        video.currentTime = target;
+      });
+    }),
   );
   await new Promise<void>((resolve) =>
     requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
@@ -237,6 +315,7 @@ export function RenderPage({
         locale={locale}
         ratio={ratio}
         time={time}
+        synchronizeMedia={false}
       />
     </div>
   );

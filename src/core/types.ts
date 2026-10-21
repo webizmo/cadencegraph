@@ -156,6 +156,27 @@ export type Operation =
   | { type: "add-asset"; asset: Asset }
   | { type: "add-node"; sceneId: string; node: MotionNode }
   | { type: "remove-node"; nodeId: string }
+  | { type: "add-scene"; scene: Scene; index?: number }
+  | { type: "remove-scene"; sceneId: string }
+  | { type: "move-scene"; sceneId: string; index: number }
+  | {
+      type: "set-scene";
+      sceneId: string;
+      name?: string;
+      theme?: "brand" | "inverted";
+    }
+  | { type: "set-project-name"; name: string }
+  | { type: "duplicate-scene"; sceneId: string; newId: string }
+  | { type: "duplicate-node"; nodeId: string; newId: string }
+  | { type: "move-node"; nodeId: string; index: number }
+  | { type: "set-node-style"; nodeId: string; style: NodeStyle }
+  | {
+      type: "set-node-animation";
+      nodeId: string;
+      animation?: MotionNode["animation"];
+    }
+  | { type: "set-node-timing"; nodeId: string; timing: MotionNode["timing"] }
+  | { type: "remove-sentence-audio"; sentenceId: string; locale: Locale }
   | {
       type: "set-protection";
       nodeId: string;

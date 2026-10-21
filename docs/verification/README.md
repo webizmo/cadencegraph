@@ -1,5 +1,28 @@
 # Acceptance evidence
 
+## Alpha.5 authoring
+
+The current release has 103 passing unit/integration tests and 21 Chromium browser tests. `npm run check`, `npm run format:check`, `npm run test:e2e` and `npm audit --audit-level=high` form the local/CI gate.
+
+| Evidence | Verified scope |
+| --- | --- |
+| [authoring-acceptance.json](authoring-acceptance.json) | Empty project → original four-scene film through real UI controls; image/video/audio upload; duplicate/delete/order; bad media recovery; JSON export/reload; 1440×1000 and 390×844 screenshots; four real EN/TR × ratio MP4s, plus a studio-button/API export |
+| [authoring-ai.json](authoring-ai.json) | Real Claude Code call adds a bilingual scene, followed by explicit transaction application; existing protected scene remains byte-for-byte unchanged |
+| `authoring-desktop.png`, `authoring-mobile.png` | Actual authoring interface after building the new film |
+| [garden-contact-sheet.png](garden-contact-sheet.png) | Sixteen frames decoded from the four final MP4s, covering all four scenes in both languages and ratios |
+| `demos/garden-*.report.json` | FFprobe stream properties and Chromium text/media/font inspection for each released film |
+| `tests/e2e/timing.spec.ts` | Pointer and keyboard trimming, language-following ends, invalid timing rejection, style/motion persistence and narration detach/undo |
+| `tests/render.integration.test.ts` | Real short MP4/audio encoding and identical decoded video pixels across repeated/reverse seeks after the media source ends |
+
+The repository Playwright workflow was used because the Browser plugin was not available. Desktop/mobile page identity, visible content, absence of framework overlays, console errors (apart from the expected HTTP 400 invalid-upload test), screenshots and interactions were checked. Browser sizes are emulation; physical phones, other browser engines and full accessibility review remain unverified.
+
+Run the studio, then `npx tsx scripts/verify-authoring.ts` to rebuild the UI-authored example and output evidence. `CADENCE_URL` overrides its localhost URL. This creates five MP4s and overwrites the example/evidence files. Run `npx tsx scripts/verify-authoring-media.ts` afterward to verify hashes, dimensions, durations and complete decoding, and extract scene frames. `npx tsx scripts/verify-authoring-ai.ts` is a separate optional live provider call and consumes configured Claude allowance.
+
+The garden artwork/video and audio fixture are original; the English attached audio is an instrumental timing fixture, not speech. New films are 12s in English and 15s in Turkish. Automated checks establish timing, structure and mechanical bounds, not independent artistic acceptance or feature parity with mature editors.
+
+## Historical alpha.4 evidence
+
+
 This directory records what was actually exercised. Automated assertions, a real provider call, browser tests and real encoded media are distinct forms of evidence.
 
 | Evidence | What it proves | What it does not prove |

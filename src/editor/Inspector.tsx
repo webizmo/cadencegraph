@@ -2,9 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import {
   LockKeyhole,
   UnlockKeyhole,
-  Link2,
   MoveUpRight,
-  AudioLines,
   LoaderCircle,
   Upload,
 } from "lucide-react";
@@ -17,6 +15,8 @@ import type {
 } from "../core";
 
 import { uploadMedia } from "./api";
+import { LayerControls } from "./LayerControls";
+import { SentenceControls } from "./SentenceControls";
 
 interface Props {
   assets: Asset[];
@@ -37,9 +37,6 @@ export function Inspector({
   const mediaInput = useRef<HTMLInputElement>(null);
   const [mediaUploading, setMediaUploading] = useState(false);
   const [mediaError, setMediaError] = useState("");
-  const audioInput = useRef<HTMLInputElement>(null);
-  const [uploading, setUploading] = useState(false);
-  const [audioError, setAudioError] = useState("");
   const [text, setText] = useState(node?.content[locale] || "");
   useEffect(
     () => setText(node?.content[locale] || ""),
@@ -47,9 +44,24 @@ export function Inspector({
   );
   if (!node)
     return (
-      <div className="empty-state">
-        <MoveUpRight size={22} />
-        <p>Select a layer to edit its content, timing, and layout.</p>
+      <div className="inspector-content">
+        <div className="empty-state">
+          <MoveUpRight size={22} />
+          <p>
+            {scene
+              ? "Add a layer to this scene to edit its content, motion and layout."
+              : "Select a scene or layer."}
+          </p>
+        </div>
+        {scene?.sentences.map((sentence) => (
+          <SentenceControls
+            key={sentence.id}
+            sentence={sentence}
+            assets={assets}
+            locale={locale}
+            transact={transact}
+          />
+        ))}
       </div>
     );
   const layout = { ...node.layout, ...node.overrides?.[ratio]?.layout };
@@ -76,35 +88,6 @@ export function Inspector({
     } finally {
       setMediaUploading(false);
       if (mediaInput.current) mediaInput.current.value = "";
-    }
-  };
-  const audioAsset = assets.find(
-    (asset) => asset.id === sentence?.audioAssetId?.[locale],
-  );
-  const importAudio = async (file?: File) => {
-    if (!file || !sentence) return;
-    setUploading(true);
-    setAudioError("");
-    try {
-      const result = await uploadMedia(file);
-      if (result.asset.type !== "audio" || !result.duration)
-        throw new Error("Choose an audio file with a readable duration.");
-      transact([
-        {
-          type: "set-sentence-audio",
-          sentenceId: sentence.id,
-          locale,
-          asset: result.asset,
-          duration: result.duration,
-        },
-      ]);
-    } catch (error) {
-      setAudioError(
-        error instanceof Error ? error.message : "Audio import failed.",
-      );
-    } finally {
-      setUploading(false);
-      if (audioInput.current) audioInput.current.value = "";
     }
   };
   const updateLayout = (key: "x" | "y" | "width" | "height", value: number) => {
@@ -283,104 +266,15 @@ export function Inspector({
           Moving a layer protects this ratio from AI layout changes.
         </p>
       </section>
-      <section className="property-section">
-        <div className="section-label">
-          <span>SEMANTIC TIMING</span>
-          <Link2 size={13} />
-        </div>
-        <div className="anchor-label">
-          <span className="anchor-dot" />
-          <span>{sentence?.id || node.timing.sentenceId}</span>
-        </div>
-        <p className="sentence-copy">{sentence?.text[locale]}</p>
-        {sentence ? (
-          <label className="duration-field">
-            <span>Sentence duration</span>
-            <div>
-              <input
-                aria-label="Sentence duration"
-                type="number"
-                min="0.5"
-                max="120"
-                step="0.1"
-                key={`${sentence.id}-${locale}-${sentence.duration[locale]}`}
-                defaultValue={sentence.duration[locale]}
-                onBlur={(event) => {
-                  const duration = Number(event.target.value);
-                  if (
-                    Number.isFinite(duration) &&
-                    duration > 0 &&
-                    duration !== sentence.duration[locale]
-                  )
-                    transact([
-                      {
-                        type: "set-sentence-duration",
-                        sentenceId: sentence.id,
-                        locale,
-                        duration,
-                      },
-                    ]);
-                }}
-              />
-              <span>s</span>
-            </div>
-          </label>
-        ) : null}
-        <p className="field-hint">
-          Attached layers follow this sentence when its duration changes.
-        </p>
-        {sentence ? (
-          <div className="narration-upload">
-            <button
-              className="button full"
-              onClick={() => audioInput.current?.click()}
-              disabled={uploading}
-            >
-              {uploading ? (
-                <LoaderCircle size={14} className="spin" />
-              ) : (
-                <Upload size={14} />
-              )}{" "}
-              {uploading
-                ? "Importing audio…"
-                : audioAsset
-                  ? "Replace narration"
-                  : "Import narration"}
-            </button>
-            <input
-              ref={audioInput}
-              className="sr-only"
-              type="file"
-              accept="audio/mpeg,audio/wav,audio/x-wav,audio/ogg,audio/mp4,audio/x-m4a"
-              aria-label="Import narration audio"
-              onChange={(event) => void importAudio(event.target.files?.[0])}
-            />
-            {audioAsset ? (
-              <>
-                <span className="narration-name">
-                  <AudioLines size={12} />
-                  {audioAsset.name || audioAsset.id}
-                </span>
-                <audio
-                  controls
-                  src={audioAsset.src}
-                  preload="metadata"
-                  aria-label="Narration audio preview"
-                />
-              </>
-            ) : null}
-            <p className="field-hint">
-              WAV, MP3, OGG or M4A · up to 20 MB. The clip duration retimes this
-              language.
-            </p>
-            {audioError ? (
-              <div className="message error" role="alert">
-                {audioError}
-              </div>
-            ) : null}
-          </div>
-        ) : null}
-      </section>
+      <LayerControls node={node} scene={scene} transact={transact} />
+      {sentence ? (
+        <SentenceControls
+          sentence={sentence}
+          assets={assets}
+          locale={locale}
+          transact={transact}
+        />
+      ) : null}
       <div className="inspector-foot">
         <span className="status-dot" /> Stable identity across all variants
       </div>

@@ -97,7 +97,8 @@
               },
               "layout": {
                 "$ref": "#/$defs/partialLayout",
-                "minProperties": 1
+                "minProperties": 1,
+                "type": "object"
               },
               "protect": {
                 "type": "boolean"
@@ -314,6 +315,276 @@
               "type",
               "nodeId",
               "asset"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "const": "add-scene"
+              },
+              "scene": {
+                "$ref": "#/$defs/scene"
+              },
+              "index": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 500
+              }
+            },
+            "required": [
+              "type",
+              "scene"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "const": "remove-scene"
+              },
+              "sceneId": {
+                "type": "string",
+                "pattern": "^[a-zA-Z][a-zA-Z0-9_.-]{0,95}$"
+              }
+            },
+            "required": [
+              "type",
+              "sceneId"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "const": "move-scene"
+              },
+              "sceneId": {
+                "type": "string",
+                "pattern": "^[a-zA-Z][a-zA-Z0-9_.-]{0,95}$"
+              },
+              "index": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 500
+              }
+            },
+            "required": [
+              "type",
+              "sceneId",
+              "index"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "const": "set-scene"
+              },
+              "sceneId": {
+                "type": "string",
+                "pattern": "^[a-zA-Z][a-zA-Z0-9_.-]{0,95}$"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "theme": {
+                "enum": [
+                  "brand",
+                  "inverted"
+                ]
+              }
+            },
+            "required": [
+              "type",
+              "sceneId"
+            ],
+            "anyOf": [
+              {
+                "required": [
+                  "name"
+                ]
+              },
+              {
+                "required": [
+                  "theme"
+                ]
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "const": "set-project-name"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "required": [
+              "type",
+              "name"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "const": "duplicate-scene"
+              },
+              "sceneId": {
+                "type": "string",
+                "pattern": "^[a-zA-Z][a-zA-Z0-9_.-]{0,95}$"
+              },
+              "newId": {
+                "type": "string",
+                "pattern": "^[a-zA-Z][a-zA-Z0-9_.-]{0,95}$"
+              }
+            },
+            "required": [
+              "type",
+              "sceneId",
+              "newId"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "const": "duplicate-node"
+              },
+              "nodeId": {
+                "type": "string",
+                "pattern": "^[a-zA-Z][a-zA-Z0-9_.-]{0,95}$"
+              },
+              "newId": {
+                "type": "string",
+                "pattern": "^[a-zA-Z][a-zA-Z0-9_.-]{0,95}$"
+              }
+            },
+            "required": [
+              "type",
+              "nodeId",
+              "newId"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "const": "move-node"
+              },
+              "nodeId": {
+                "type": "string",
+                "pattern": "^[a-zA-Z][a-zA-Z0-9_.-]{0,95}$"
+              },
+              "index": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 500
+              }
+            },
+            "required": [
+              "type",
+              "nodeId",
+              "index"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "const": "set-node-style"
+              },
+              "nodeId": {
+                "type": "string",
+                "pattern": "^[a-zA-Z][a-zA-Z0-9_.-]{0,95}$"
+              },
+              "style": {
+                "$ref": "#/$defs/node/properties/style"
+              }
+            },
+            "required": [
+              "type",
+              "nodeId",
+              "style"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "const": "set-node-animation"
+              },
+              "nodeId": {
+                "type": "string",
+                "pattern": "^[a-zA-Z][a-zA-Z0-9_.-]{0,95}$"
+              },
+              "animation": {
+                "$ref": "#/$defs/node/properties/animation"
+              }
+            },
+            "required": [
+              "type",
+              "nodeId"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "const": "set-node-timing"
+              },
+              "nodeId": {
+                "type": "string",
+                "pattern": "^[a-zA-Z][a-zA-Z0-9_.-]{0,95}$"
+              },
+              "timing": {
+                "$ref": "#/$defs/node/properties/timing"
+              }
+            },
+            "required": [
+              "type",
+              "nodeId",
+              "timing"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "type": {
+                "const": "remove-sentence-audio"
+              },
+              "sentenceId": {
+                "type": "string",
+                "pattern": "^[a-zA-Z][a-zA-Z0-9_.-]{0,95}$"
+              },
+              "locale": {
+                "type": "string",
+                "pattern": "^[a-z]{2,3}(?:-[A-Za-z]{2,8})?$"
+              }
+            },
+            "required": [
+              "type",
+              "sentenceId",
+              "locale"
             ]
           }
         ]

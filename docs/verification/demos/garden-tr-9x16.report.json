@@ -1,0 +1,368 @@
+{
+  "projectId": "project-f95e1030-864",
+  "revision": 59,
+  "locale": "tr",
+  "ratio": "9:16",
+  "width": 720,
+  "height": 1280,
+  "fps": 24,
+  "frames": 360,
+  "duration": 15,
+  "audio": {
+    "score": true,
+    "scoreGain": 2.2,
+    "sentenceTracks": 0,
+    "note": "Original synthesized score. No spoken narration in this demo."
+  },
+  "inspections": [
+    {
+      "time": 0.9,
+      "sceneId": "project-f95e1030-864-scene-1",
+      "fontsReady": true,
+      "images": 1,
+      "issues": []
+    },
+    {
+      "time": 1.4000000000000001,
+      "sceneId": "project-f95e1030-864-scene-1",
+      "fontsReady": true,
+      "images": 1,
+      "issues": []
+    },
+    {
+      "time": 2.275,
+      "sceneId": "project-f95e1030-864-scene-1",
+      "fontsReady": true,
+      "images": 1,
+      "issues": []
+    },
+    {
+      "time": 4.4,
+      "sceneId": "scene-c64fff73-201",
+      "fontsReady": true,
+      "images": 0,
+      "issues": []
+    },
+    {
+      "time": 4.9,
+      "sceneId": "scene-c64fff73-201",
+      "fontsReady": true,
+      "images": 0,
+      "issues": []
+    },
+    {
+      "time": 5.775,
+      "sceneId": "scene-c64fff73-201",
+      "fontsReady": true,
+      "images": 0,
+      "issues": []
+    },
+    {
+      "time": 7.9,
+      "sceneId": "scene-60663e28-2e4",
+      "fontsReady": true,
+      "images": 0,
+      "issues": []
+    },
+    {
+      "time": 8.2,
+      "sceneId": "scene-60663e28-2e4",
+      "fontsReady": true,
+      "images": 0,
+      "issues": []
+    },
+    {
+      "time": 8.6,
+      "sceneId": "scene-60663e28-2e4",
+      "fontsReady": true,
+      "images": 0,
+      "issues": []
+    },
+    {
+      "time": 9.6,
+      "sceneId": "scene-60663e28-2e4",
+      "fontsReady": true,
+      "images": 0,
+      "issues": []
+    },
+    {
+      "time": 11.9,
+      "sceneId": "scene-c4c44a86-53e",
+      "fontsReady": true,
+      "images": 0,
+      "issues": []
+    },
+    {
+      "time": 12.4,
+      "sceneId": "scene-c4c44a86-53e",
+      "fontsReady": true,
+      "images": 0,
+      "issues": []
+    },
+    {
+      "time": 12.6,
+      "sceneId": "scene-c4c44a86-53e",
+      "fontsReady": true,
+      "images": 0,
+      "issues": []
+    },
+    {
+      "time": 13.6,
+      "sceneId": "scene-c4c44a86-53e",
+      "fontsReady": true,
+      "images": 0,
+      "issues": []
+    },
+    {
+      "time": 0,
+      "sceneId": "project-f95e1030-864-scene-1",
+      "fontsReady": true,
+      "images": 1,
+      "issues": []
+    },
+    {
+      "time": 1,
+      "sceneId": "project-f95e1030-864-scene-1",
+      "fontsReady": true,
+      "images": 1,
+      "issues": []
+    },
+    {
+      "time": 2,
+      "sceneId": "project-f95e1030-864-scene-1",
+      "fontsReady": true,
+      "images": 1,
+      "issues": []
+    },
+    {
+      "time": 3,
+      "sceneId": "project-f95e1030-864-scene-1",
+      "fontsReady": true,
+      "images": 1,
+      "issues": []
+    },
+    {
+      "time": 4,
+      "sceneId": "scene-c64fff73-201",
+      "fontsReady": true,
+      "images": 0,
+      "issues": []
+    },
+    {
+      "time": 5,
+      "sceneId": "scene-c64fff73-201",
+      "fontsReady": true,
+      "images": 0,
+      "issues": []
+    },
+    {
+      "time": 6,
+      "sceneId": "scene-c64fff73-201",
+      "fontsReady": true,
+      "images": 0,
+      "issues": []
+    },
+    {
+      "time": 7,
+      "sceneId": "scene-60663e28-2e4",
+      "fontsReady": true,
+      "images": 0,
+      "issues": []
+    },
+    {
+      "time": 8,
+      "sceneId": "scene-60663e28-2e4",
+      "fontsReady": true,
+      "images": 0,
+      "issues": []
+    },
+    {
+      "time": 9,
+      "sceneId": "scene-60663e28-2e4",
+      "fontsReady": true,
+      "images": 0,
+      "issues": []
+    },
+    {
+      "time": 10,
+      "sceneId": "scene-60663e28-2e4",
+      "fontsReady": true,
+      "images": 0,
+      "issues": []
+    },
+    {
+      "time": 11,
+      "sceneId": "scene-c4c44a86-53e",
+      "fontsReady": true,
+      "images": 0,
+      "issues": []
+    },
+    {
+      "time": 12,
+      "sceneId": "scene-c4c44a86-53e",
+      "fontsReady": true,
+      "images": 0,
+      "issues": []
+    },
+    {
+      "time": 13,
+      "sceneId": "scene-c4c44a86-53e",
+      "fontsReady": true,
+      "images": 0,
+      "issues": []
+    },
+    {
+      "time": 14,
+      "sceneId": "scene-c4c44a86-53e",
+      "fontsReady": true,
+      "images": 0,
+      "issues": []
+    }
+  ],
+  "preflight": [],
+  "output": "garden-tr-9x16.mp4",
+  "ffprobe": {
+    "streams": [
+      {
+        "index": 0,
+        "codec_name": "h264",
+        "codec_long_name": "H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10",
+        "profile": "High",
+        "codec_type": "video",
+        "codec_tag_string": "avc1",
+        "codec_tag": "0x31637661",
+        "mime_codec_string": "avc1.64001f",
+        "width": 720,
+        "height": 1280,
+        "coded_width": 720,
+        "coded_height": 1280,
+        "has_b_frames": 2,
+        "sample_aspect_ratio": "1:1",
+        "display_aspect_ratio": "9:16",
+        "pix_fmt": "yuvj420p",
+        "level": 31,
+        "color_range": "pc",
+        "color_space": "bt470bg",
+        "chroma_location": "left",
+        "field_order": "progressive",
+        "is_avc": "true",
+        "nal_length_size": "4",
+        "id": "0x1",
+        "r_frame_rate": "24/1",
+        "avg_frame_rate": "24/1",
+        "time_base": "1/12288",
+        "start_pts": 0,
+        "start_time": "0.000000",
+        "duration_ts": 184320,
+        "duration": "15.000000",
+        "bit_rate": "128861",
+        "bits_per_raw_sample": "8",
+        "nb_frames": "360",
+        "extradata_size": 49,
+        "disposition": {
+          "default": 1,
+          "dub": 0,
+          "original": 0,
+          "comment": 0,
+          "lyrics": 0,
+          "karaoke": 0,
+          "forced": 0,
+          "hearing_impaired": 0,
+          "visual_impaired": 0,
+          "clean_effects": 0,
+          "attached_pic": 0,
+          "timed_thumbnails": 0,
+          "non_diegetic": 0,
+          "captions": 0,
+          "descriptions": 0,
+          "metadata": 0,
+          "dependent": 0,
+          "still_image": 0,
+          "multilayer": 0
+        },
+        "tags": {
+          "language": "und",
+          "handler_name": "VideoHandler",
+          "encoder": "Lavc63.1.101 libx264"
+        },
+        "side_data_list": [
+          {
+            "side_data_type": "ICC Profile"
+          }
+        ]
+      },
+      {
+        "index": 1,
+        "codec_name": "aac",
+        "codec_long_name": "AAC (Advanced Audio Coding)",
+        "profile": "LC",
+        "codec_type": "audio",
+        "codec_tag_string": "mp4a",
+        "codec_tag": "0x6134706d",
+        "mime_codec_string": "mp4a.40.2",
+        "sample_fmt": "fltp",
+        "sample_rate": "48000",
+        "channels": 1,
+        "channel_layout": "mono",
+        "bits_per_sample": 0,
+        "initial_padding": 1024,
+        "id": "0x2",
+        "r_frame_rate": "0/0",
+        "avg_frame_rate": "0/0",
+        "time_base": "1/48000",
+        "start_pts": 0,
+        "start_time": "0.000000",
+        "duration_ts": 720000,
+        "duration": "15.000000",
+        "bit_rate": "166792",
+        "nb_frames": "705",
+        "extradata_size": 5,
+        "disposition": {
+          "default": 1,
+          "dub": 0,
+          "original": 0,
+          "comment": 0,
+          "lyrics": 0,
+          "karaoke": 0,
+          "forced": 0,
+          "hearing_impaired": 0,
+          "visual_impaired": 0,
+          "clean_effects": 0,
+          "attached_pic": 0,
+          "timed_thumbnails": 0,
+          "non_diegetic": 0,
+          "captions": 0,
+          "descriptions": 0,
+          "metadata": 0,
+          "dependent": 0,
+          "still_image": 0,
+          "multilayer": 0
+        },
+        "tags": {
+          "language": "und",
+          "handler_name": "SoundHandler"
+        }
+      }
+    ],
+    "format": {
+      "filename": "garden-tr-9x16.mp4",
+      "nb_streams": 2,
+      "nb_programs": 0,
+      "nb_stream_groups": 0,
+      "format_name": "mov,mp4,m4a,3gp,3g2,mj2",
+      "format_long_name": "QuickTime / MOV",
+      "start_time": "0.000000",
+      "duration": "15.000000",
+      "size": "566953",
+      "bit_rate": "302374",
+      "probe_score": 100,
+      "tags": {
+        "major_brand": "isom",
+        "minor_version": "512",
+        "compatible_brands": "isomiso2avc1mp41",
+        "encoder": "Lavf63.1.101"
+      }
+    }
+  },
+  "renderedAt": "2026-10-21T23:30:48.902Z"
+}

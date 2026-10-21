@@ -18,7 +18,7 @@ interface Props {
 }
 export function AiPanel({ project, onApply, onClose }: Props) {
   const [prompt, setPrompt] = useState(
-    "Make the English headline shorter and more confident. Keep the Turkish copy unchanged.",
+    "Create two new scenes about a community garden: a short opening and a closing invitation. Write English and Turkish copy, with portrait and landscape layouts. Preserve existing scenes.",
   );
   const [response, setResponse] = useState<ProposalResponse | null>(null);
   const [busy, setBusy] = useState(false);
@@ -62,8 +62,8 @@ export function AiPanel({ project, onApply, onClose }: Props) {
         </button>
       </div>
       <p className="ai-intro">
-        Describe your revision. Review every change before it touches your
-        project.
+        Describe a new scene sequence or a revision. Review every change before
+        it touches your project.
       </p>
       <label className="sr-only" htmlFor="ai-prompt">
         Revision request
@@ -73,7 +73,7 @@ export function AiPanel({ project, onApply, onClose }: Props) {
         rows={4}
         value={prompt}
         onChange={(event) => setPrompt(event.target.value)}
-        placeholder="Shorten the opening. Make the English CTA more direct…"
+        placeholder="Add an opening, a story scene and a closing invitation…"
       />
       <div className="ai-request-footer">
         <span className="mono">Revision {project.revision}</span>

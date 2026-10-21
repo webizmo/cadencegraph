@@ -44,9 +44,11 @@ export function useMediaClock(
   root: RefObject<HTMLDivElement | null>,
   time: number,
   playing: boolean,
+  enabled = true,
 ) {
   const previous = useRef<HTMLMediaElement[]>([]);
   useEffect(() => {
+    if (!enabled) return;
     const elements = [
       ...(root.current?.querySelectorAll<HTMLMediaElement>(
         "video[data-project-time],audio[data-project-time]",
@@ -65,7 +67,10 @@ export function useMediaClock(
           media.tagName === "AUDIO" && slot && Number.isFinite(media.duration)
             ? media.duration / slot
             : 1;
-        const target = desired * speed;
+        const requested = desired * speed;
+        const target = Number.isFinite(media.duration)
+          ? Math.min(requested, Math.max(0, media.duration - 0.01))
+          : requested;
         media.playbackRate = Math.max(0.0625, Math.min(16, speed));
         if (
           Number.isFinite(media.duration) &&
@@ -75,7 +80,12 @@ export function useMediaClock(
             target,
             Math.max(0, media.duration - 0.01),
           );
-        if (playing && desired >= 0 && (!slot || desired < slot))
+        if (
+          playing &&
+          desired >= 0 &&
+          (!slot || desired < slot) &&
+          (media.tagName !== "VIDEO" || requested < media.duration)
+        )
           void media.play().catch(() => {
             media.dataset.previewError = "playback-blocked";
           });
@@ -88,7 +98,7 @@ export function useMediaClock(
     return () => {
       cleanups.forEach((fn) => fn());
     };
-  }, [root, time, playing]);
+  }, [root, time, playing, enabled]);
   useEffect(
     () => () => {
       previous.current.forEach((media) => media.pause());

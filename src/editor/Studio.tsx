@@ -9,6 +9,7 @@ import {
   Download,
   Expand,
   Film,
+  FilePlus2,
   Grid2X2,
   Image,
   Layers,
@@ -25,12 +26,17 @@ import {
 import {
   applyTransaction,
   compileProject,
+  createBlankProject,
+  createNode,
+  createScene,
+  SCENE_TEMPLATES,
   parseProject,
   resolveLayout,
   type AspectRatio,
   type Layout,
   type MotionNode,
   type Operation,
+  type Project,
 } from "../core";
 import { Composition } from "../render/Composition";
 import { Inspector } from "./Inspector";
@@ -39,6 +45,11 @@ import { AiPanel } from "./AiPanel";
 import { ChecksPanel } from "./ChecksPanel";
 import { formatTime, type ProposalResponse } from "./api";
 import { useProject } from "./useProject";
+import {
+  AuthoringPanel,
+  ProjectName,
+  type AuthorSelection,
+} from "./AuthoringPanel";
 
 function WaveMark() {
   return (
@@ -103,6 +114,10 @@ export function Studio() {
       project.scenes[0]?.nodes[0]?.id ||
       null,
   );
+  const [selectedSceneId, setSelectedSceneId] = useState(project.scenes[0]?.id);
+  const [sceneTemplate, setSceneTemplate] = useState<
+    "blank" | "title" | "quote" | "cards" | "closing"
+  >("blank");
   const [time, setTime] = useState(1.5);
   const [playing, setPlaying] = useState(false);
   const [panel, setPanel] = useState<"properties" | "claude" | "checks">(
@@ -122,6 +137,8 @@ export function Studio() {
   const frameRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragDraft, setDragDraft] = useState<Layout | null>(null);
+  const sceneOrder = `${project.id}:${project.scenes.map((scene) => scene.id).join(",")}`;
+  const previousSceneOrder = useRef(sceneOrder);
   const currentLocale = project.locales.includes(locale)
     ? locale
     : project.locales[0];
@@ -135,9 +152,9 @@ export function Studio() {
   const activeScene =
     compiled.scenes.find((scene) => time >= scene.start && time < scene.end) ||
     compiled.scenes[compiled.scenes.length - 1];
-  const selectedScene = project.scenes.find((scene) =>
-    scene.nodes.some((node) => node.id === selectedId),
-  );
+  const selectedScene =
+    project.scenes.find((scene) => scene.id === selectedSceneId) ||
+    project.scenes[0];
   const selectedNode = selectedScene?.nodes.find(
     (node) => node.id === selectedId,
   );
@@ -167,6 +184,31 @@ export function Studio() {
   useEffect(() => {
     setTime((value) => Math.min(value, Math.max(0, compiled.duration - 0.001)));
   }, [compiled.duration]);
+  useEffect(() => {
+    // Undo/import may remove a selected scene or layer. Keep empty scenes selectable.
+    const scene = project.scenes.find((value) => value.id === selectedSceneId);
+    const structureChanged = previousSceneOrder.current !== sceneOrder;
+    previousSceneOrder.current = sceneOrder;
+    if (!scene) {
+      const first = project.scenes[0];
+      setSelectedSceneId(first?.id);
+      setSelectedId(
+        first?.nodes.find((node) => node.role === "headline")?.id ||
+          first?.nodes[0]?.id ||
+          null,
+      );
+      setTime(Math.min(1, compiled.scenes[0]?.duration / 2 || 0));
+      setPlaying(false);
+    } else {
+      if (selectedId && !scene.nodes.some((node) => node.id === selectedId))
+        setSelectedId(scene.nodes[0]?.id || null);
+      if (structureChanged) {
+        const timing = compiled.scenes.find((value) => value.id === scene.id)!;
+        setTime(timing.start + Math.min(1, timing.duration / 2));
+        setPlaying(false);
+      }
+    }
+  }, [project, selectedSceneId, selectedId, compiled.scenes, sceneOrder]);
   useEffect(() => {
     if (!playing) return;
     let previous = performance.now();
@@ -199,7 +241,10 @@ export function Studio() {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "z") {
         event.preventDefault();
         event.shiftKey ? redo() : undo();
-      } else if (event.code === "Space") {
+      } else if (
+        event.code === "Space" &&
+        !target.closest('button,a,summary,[role="button"]')
+      ) {
         event.preventDefault();
         setPlaying((value) => !value);
       }
@@ -207,12 +252,44 @@ export function Studio() {
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, [undo, redo]);
-  const update = (operations: Operation[]) => {
+  const selectScene = (
+    id: string,
+    nodeId?: string,
+    source: Project = project,
+  ) => {
+    const scene = source.scenes.find((value) => value.id === id);
+    if (!scene) return;
+    const output = compileProject(
+      source,
+      source.locales.includes(currentLocale)
+        ? currentLocale
+        : source.locales[0],
+      source.ratios.includes(currentRatio) ? currentRatio : source.ratios[0],
+    );
+    const timing = output.scenes.find((value) => value.id === id)!;
+    setSelectedSceneId(id);
+    setSelectedId(
+      scene.nodes.find((node) => node.id === nodeId)?.id ||
+        scene.nodes.find((node) => node.role === "headline")?.id ||
+        scene.nodes[0]?.id ||
+        null,
+    );
+    setTime(timing.start + Math.min(1, timing.duration / 2));
+    setPlaying(false);
+  };
+  const update = (operations: Operation[], selection?: AuthorSelection) => {
     const result = transact(operations);
     if (!result.applied)
       setNotice(result.conflicts.map((conflict) => conflict.message).join(" "));
+    else if (selection)
+      selectScene(selection.sceneId, selection.nodeId, result.project);
+    return result.applied;
   };
   const select = (id: string) => {
+    const scene = project.scenes.find((value) =>
+      value.nodes.some((node) => node.id === id),
+    );
+    if (scene) setSelectedSceneId(scene.id);
     setSelectedId(id);
   };
   const switchLocale = (language: string) => {
@@ -306,6 +383,7 @@ export function Studio() {
       setLocale(next.locales[0]);
       setRatio(next.ratios[0]);
       setSelectedId(next.scenes[0]?.nodes[0]?.id || null);
+      setSelectedSceneId(next.scenes[0]?.id);
       setTime(0.8);
       setPlaying(false);
       setNotice(`Imported ${next.name}.`);
@@ -330,30 +408,67 @@ export function Studio() {
     );
   };
   const addLayer = () => {
-    const scene =
-      project.scenes.find((scene) => scene.id === activeScene?.id) ||
-      project.scenes[0];
+    const scene = selectedScene;
     if (!scene) return;
     const id = `text-${crypto.randomUUID().slice(0, 8)}`;
-    update([
-      {
-        type: "add-node",
-        sceneId: scene.id,
-        node: {
-          id,
-          type: "text",
-          role: "new-text",
-          content: Object.fromEntries(
-            project.locales.map((locale) => [locale, "Your next idea."]),
-          ),
-          layout: { x: 10, y: 45, width: 75, height: 20 },
-          timing: { sentenceId: scene.sentences[0].id },
-          style: { fontSize: 74, fontWeight: 700 },
-          animation: { enter: "rise" },
+    update(
+      [
+        {
+          type: "add-node",
+          sceneId: scene.id,
+          node: createNode("text", id, scene.sentences[0].id, project.locales),
         },
-      },
-    ]);
-    setSelectedId(id);
+      ],
+      { sceneId: scene.id, nodeId: id },
+    );
+    setPanel("properties");
+  };
+  const addScene = () => {
+    const id = `scene-${crypto.randomUUID().slice(0, 12)}`;
+    const scene = createScene(
+      sceneTemplate,
+      id,
+      project.locales,
+      project.ratios,
+    );
+    const index =
+      project.scenes.findIndex((value) => value.id === selectedScene.id) + 1;
+    update([{ type: "add-scene", scene, index }], { sceneId: id });
+    setPanel("properties");
+    setLeftTab("scenes");
+  };
+  const newProject = () => {
+    const next = createBlankProject(
+      `project-${crypto.randomUUID().slice(0, 12)}`,
+    );
+    replace(next);
+    setLocale(next.locales[0]);
+    setRatio(next.ratios[0]);
+    selectScene(next.scenes[0].id, undefined, next);
+    setVariants(false);
+    setPanel("properties");
+    setLeftTab("scenes");
+    setNotice("New blank project. Undo restores your previous project.");
+  };
+  const insertAsset = (assetId: string) => {
+    const id = `media-${crypto.randomUUID().slice(0, 12)}`;
+    update(
+      [
+        {
+          type: "add-node",
+          sceneId: selectedScene.id,
+          node: createNode(
+            "media",
+            id,
+            selectedScene.sentences[0].id,
+            project.locales,
+            assetId,
+          ),
+        },
+      ],
+      { sceneId: selectedScene.id, nodeId: id },
+    );
+    setPanel("properties");
   };
   return (
     <div className="studio-shell">
@@ -364,8 +479,10 @@ export function Studio() {
         </a>
         <div className="header-divider" />
         <div className="project-title">
-          <span>{project.name}</span>
-          <ChevronDown size={14} />
+          <ProjectName
+            name={project.name}
+            onRename={(name) => update([{ type: "set-project-name", name }])}
+          />
         </div>
         <div className="header-actions">
           <div className="history-actions">
@@ -388,6 +505,15 @@ export function Studio() {
               <span>Redo</span>
             </button>
           </div>
+          <button
+            className="button compact new-project-button"
+            aria-label="New project"
+            title="New blank project (undo available)"
+            onClick={newProject}
+          >
+            <FilePlus2 size={15} />
+            <span>New</span>
+          </button>
           <button
             className="button compact import-button"
             aria-label="Import project JSON"
@@ -427,6 +553,28 @@ export function Studio() {
           onChange={(event) => void importFile(event.target.files?.[0])}
         />
       </header>
+      <div className="mobile-project-bar">
+        <ProjectName
+          name={project.name}
+          onRename={(name) => update([{ type: "set-project-name", name }])}
+        />
+        <button
+          className="icon-button"
+          aria-label="Undo"
+          disabled={!canUndo}
+          onClick={undo}
+        >
+          <Undo2 size={15} />
+        </button>
+        <button
+          className="icon-button"
+          aria-label="Redo"
+          disabled={!canRedo}
+          onClick={redo}
+        >
+          <Redo2 size={15} />
+        </button>
+      </div>
       <main className="studio-main">
         <aside className="scene-rail" aria-label="Project scenes and layers">
           <div className="rail-tabs">
@@ -451,6 +599,29 @@ export function Studio() {
               <Plus size={17} />
             </button>
           </div>
+          <div className="scene-create">
+            <select
+              aria-label="Scene template"
+              value={sceneTemplate}
+              onChange={(event) =>
+                setSceneTemplate(event.target.value as typeof sceneTemplate)
+              }
+            >
+              {SCENE_TEMPLATES.map((template) => (
+                <option key={template.id} value={template.id}>
+                  {template.name}
+                </option>
+              ))}
+            </select>
+            <button
+              className="button"
+              aria-label="Add scene"
+              onClick={addScene}
+            >
+              <Plus size={14} />
+              <span>Add scene</span>
+            </button>
+          </div>
           <div className="scene-scroll">
             {leftTab === "scenes" ? (
               project.scenes.map((scene, index) => {
@@ -460,19 +631,9 @@ export function Studio() {
                 return (
                   <div className="scene-group" key={scene.id}>
                     <button
-                      className={`scene-row ${activeScene?.id === scene.id ? "active" : ""}`}
-                      onClick={() => {
-                        seek(
-                          sceneTiming.start +
-                            Math.min(1, sceneTiming.duration / 2),
-                        );
-                        setSelectedId(
-                          scene.nodes.find((node) => node.role === "headline")
-                            ?.id ||
-                            scene.nodes[0]?.id ||
-                            null,
-                        );
-                      }}
+                      className={`scene-row ${selectedScene?.id === scene.id ? "active" : ""}`}
+                      aria-pressed={selectedScene?.id === scene.id}
+                      onClick={() => selectScene(scene.id)}
                     >
                       <span className="scene-number">
                         {String(index + 1).padStart(2, "0")}
@@ -497,7 +658,17 @@ export function Studio() {
                           }}
                         >
                           <NodeIcon node={node} />
-                          <span>{node.role || node.type}</span>
+                          <span title={node.content[currentLocale]}>
+                            {node.role ||
+                              (node.type === "media"
+                                ? project.assets.find(
+                                    (asset) => asset.id === node.assetId,
+                                  )?.name
+                                : node.content[currentLocale]
+                                    ?.trim()
+                                    .replace(/\s+/g, " ")) ||
+                              node.type}
+                          </span>
                           {node.overrides?.[currentRatio]?.protected ? (
                             <LockKeyhole size={12} className="layer-lock" />
                           ) : (
@@ -505,6 +676,11 @@ export function Studio() {
                           )}
                         </button>
                       ))}
+                      {!scene.nodes.length ? (
+                        <p className="empty-layer-list">
+                          Empty scene · add your first layer
+                        </p>
+                      ) : null}
                     </div>
                   </div>
                 );
@@ -522,10 +698,21 @@ export function Studio() {
                       <strong>{asset.name || asset.id}</strong>
                       <small>{asset.type}</small>
                     </div>
+                    {["image", "video"].includes(asset.type) ? (
+                      <button
+                        className="icon-button"
+                        aria-label={`Insert ${asset.name || asset.id} into scene`}
+                        title="Insert into selected scene"
+                        onClick={() => insertAsset(asset.id)}
+                      >
+                        <Plus size={15} />
+                      </button>
+                    ) : null}
                   </div>
                 ))}
                 <p className="field-hint">
-                  Assets are referenced by stable IDs in your project JSON.
+                  Add an image or video from Properties. Reuse visual assets in
+                  any scene with +.
                 </p>
               </div>
             )}
@@ -711,6 +898,8 @@ export function Studio() {
             </button>
           </div>
           <Timeline
+            project={project}
+            onTimingChange={update}
             compiled={compiled}
             time={time}
             selectedId={selectedId}
@@ -754,6 +943,14 @@ export function Studio() {
           <div className="property-scroll">
             {panel === "properties" ? (
               <>
+                {selectedScene ? (
+                  <AuthoringPanel
+                    project={project}
+                    scene={selectedScene}
+                    node={selectedNode}
+                    edit={update}
+                  />
+                ) : null}
                 <Inspector
                   assets={project.assets}
                   node={selectedNode}

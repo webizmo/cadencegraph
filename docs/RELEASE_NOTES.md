@@ -1,3 +1,23 @@
+# v0.1.0-alpha.5
+
+CadenceGraph can now build an original film from an empty project. The previous editor exposed revisions of an existing three-scene example; this release adds scene and layer authoring through the same validated, undoable transaction engine.
+
+- Create a blank project, rename it, add blank/title/quote/three-point/closing scenes, and duplicate, delete or reorder scenes and layers.
+- Insert text, cards, captions, CTA, image and video layers. Upload or reuse local media; attach and detach sentence audio without losing source assets.
+- Change text size, weight, color and alignment; choose project design presets and per-scene inversion; edit entrance, delay and sentence-relative start/end timing. Timeline bars support pointer movement/edge trimming and keyboard edge adjustments.
+- Ask Claude for original bilingual scenes as well as revisions. Review structural, style, motion and timing operations before applying. Stale revisions and protected human layouts still block conflicting transactions.
+- New scenes render without the old demo's fixed logo, counter or progress decorations. Schema v1 and the existing demo remain compatible.
+
+Validation covers 103 unit/integration tests and 21 Chromium browser tests, including real media upload, semantic timing, scene/layer CRUD, undo, protected/stale proposals, and responsive views at 390, 600, 1440 and 1588 pixels. A real authenticated Claude call created a new bilingual scene and preserved the protected existing scene. The short-video regression checks repeated and reverse seeks against actual decoded frames.
+
+Release assets include four newly authored **Community Garden** H.264/AAC films at 24 fps: English 12s and Turkish 15s, in 1280×720 landscape and 720×1280 portrait. The original image, short video and instrumental audio fixture are bundled in the repository. A separate real 30 fps studio export verifies the export button, API queue and download. Exact hashes, dimensions, duration, audio tracks and output inspection counts are in `docs/verification/authoring-acceptance.json`. Each film also has a poster and render report. `SHA256SUMS` covers downloadable media.
+
+The audio fixture is synthesized instrumental music, **not narration or speech recognition evidence**. The source video's audio is muted. Motion editing is four entrance presets and timing controls; arbitrary property keyframes/curves, source in/out trimming, generative media, automatic translation/transcription, cloud rendering and multi-user collaboration remain outside this alpha. Mobile proof uses Chromium viewport emulation, not physical-device certification.
+
+Official-source competitor research, usage, architecture, format, renderer, components and design documentation were updated with the implemented scope and these limits.
+
+---
+
 # v0.1.0-alpha.4
 
 This revision keeps each MP4 download labeled with the language, ratio and project revision that produced it. Switching the preview to another variant no longer presents an earlier export as the selected output. A browser regression test covers exporting EN 16:9, switching to TR 9:16, and exporting the new variant. The eight release videos are unchanged from alpha.3.
