@@ -4,6 +4,7 @@ import { createServer } from "node:net";
 import { mkdir, readFile, writeFile, rm } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { chromium } from "playwright";
+import { expect } from "@playwright/test";
 import { createBlankProject, createNode } from "../src/core";
 
 await rm("outputs/production/production-verification.json", { force: true });
@@ -93,16 +94,14 @@ try {
     mimeType: "application/json",
     buffer: Buffer.from(JSON.stringify(project)),
   });
-  await page.getByLabel("Layer text").waitFor();
-  assert.equal(
-    await page.getByLabel("Layer text").inputValue(),
-    "Ready to create.",
+  await expect(page.getByLabel("Layer text")).toHaveValue("Ready to create.");
+  await page.waitForFunction(
+    () =>
+      JSON.parse(localStorage.getItem("cadencegraph.project.v1") || "null")
+        ?.id === "release-check",
   );
   await page.reload();
-  assert.equal(
-    await page.getByLabel("Layer text").inputValue(),
-    "Ready to create.",
-  );
+  await expect(page.getByLabel("Layer text")).toHaveValue("Ready to create.");
   assert.equal(await page.locator("vite-error-overlay").count(), 0);
   await page.getByLabel("Preview position").fill("0.75");
   await page.screenshot({ path: "outputs/production/studio-desktop.png" });
