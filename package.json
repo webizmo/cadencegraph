@@ -1,6 +1,6 @@
 {
   "name": "cadencegraph",
-  "version": "0.1.0-alpha.5",
+  "version": "0.1.0-alpha.6",
   "private": true,
   "type": "module",
   "description": "An open motion studio that keeps meaning, timing and human layout decisions connected.",
@@ -18,7 +18,11 @@
     "check": "npm run test && npm run build",
     "start": "NODE_ENV=production tsx server/index.ts",
     "format": "prettier --write src server scripts tests *.ts",
-    "format:check": "prettier --check src server scripts tests *.ts"
+    "format:check": "prettier --check src server scripts tests *.ts",
+    "doctor": "tsx scripts/doctor.ts",
+    "verify:production": "tsx scripts/verify-production.ts",
+    "release:prepare": "tsx scripts/prepare-release.ts",
+    "release:verify": "tsx scripts/verify-release.ts"
   },
   "dependencies": {
     "express": "^5.1.0",

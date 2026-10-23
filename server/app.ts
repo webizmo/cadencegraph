@@ -5,6 +5,7 @@ import { mkdir } from "node:fs/promises";
 import { parseProject } from "../src/core/index";
 import { aiStatus, propose } from "./ai";
 import { storeMedia } from "./media";
+import { rendererStatus } from "./runtime";
 
 export interface RenderJob {
   id: string;
@@ -18,6 +19,7 @@ export function createApp(options: {
   outputDir?: string;
   ai?: typeof propose;
   status?: typeof aiStatus;
+  rendererStatus?: typeof rendererStatus;
   render?: (
     project: ReturnType<typeof parseProject>,
     locale: string,
@@ -75,10 +77,11 @@ export function createApp(options: {
     }),
   );
   app.get("/api/status", async (_req, res) => {
-    res.json({
-      ai: await (options.status ?? aiStatus)(),
-      renderer: { available: true, engine: "Chromium + FFmpeg" },
-    });
+    const [ai, renderer] = await Promise.all([
+      (options.status ?? aiStatus)(),
+      (options.rendererStatus ?? rendererStatus)(),
+    ]);
+    res.json({ ai, renderer });
   });
   app.post("/api/ai", async (req, res) => {
     if (aiBusy) {
@@ -189,11 +192,16 @@ export function createApp(options: {
       res: express.Response,
       _next: express.NextFunction,
     ) => {
-      res.status(400).json({
-        error:
-          error instanceof Error && error.message.includes("too large")
-            ? "Project exceeds the 2 MB limit."
-            : "Malformed JSON request.",
+      const tooLarge =
+        error instanceof Error &&
+        "type" in error &&
+        error.type === "entity.too.large";
+      res.status(tooLarge ? 413 : 400).json({
+        error: tooLarge
+          ? _req.path === "/api/media"
+            ? "Media request exceeds the 28 MB upload limit. Choose a file no larger than 20 MB."
+            : "Project exceeds the 2 MB limit."
+          : "Malformed JSON request.",
       });
     },
   );

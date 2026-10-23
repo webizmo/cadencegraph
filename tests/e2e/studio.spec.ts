@@ -537,3 +537,47 @@ for (const viewport of [
     expect(stage!.width / stage!.height).toBeCloseTo(16 / 9, 1);
   });
 }
+
+test("repeated toolbar exports retain the running job across panels and variants", async ({
+  page,
+}) => {
+  await load(page);
+  let requests = 0;
+  let complete = false;
+  await page.route(/\/api\/render(?:\/active)?$/, async (route) => {
+    if (route.request().method() === "POST") requests++;
+    await route.fulfill({
+      contentType: "application/json",
+      body: JSON.stringify({
+        id: "active",
+        status: complete ? "complete" : "rendering",
+        progress: complete ? 1 : 0.4,
+        ...(complete ? { url: "/outputs/active.mp4" } : {}),
+      }),
+    });
+  });
+  await page.getByRole("button", { name: "Export film" }).click();
+  await expect(
+    page.getByText("Export job: EN · 16:9 · Revision 0"),
+  ).toBeVisible();
+  await inspector(page)
+    .getByRole("button", { name: "Claude", exact: true })
+    .click();
+  await page.getByLabel("Preview language").selectOption("tr");
+  await page.getByRole("button", { name: "9:16", exact: true }).click();
+  await page.getByRole("button", { name: "Export film" }).click();
+  await page.getByRole("button", { name: "Export film" }).click();
+  await expect(
+    page.getByText("Export job: EN · 16:9 · Revision 0"),
+  ).toBeVisible();
+  expect(requests).toBe(1);
+  complete = true;
+  await expect(
+    page.getByRole("link", { name: "Download EN 16:9 MP4" }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Export film" }).click();
+  await expect(
+    page.getByRole("link", { name: "Download TR 9:16 MP4" }),
+  ).toBeVisible();
+  expect(requests).toBe(2);
+});

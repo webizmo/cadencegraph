@@ -287,7 +287,7 @@ export async function renderProject(
             );
           }),
         ]);
-      if (frame === Math.round(fps * 2))
+      if (frame === Math.min(Math.round(fps * 2), Math.floor(frames / 2)))
         await page.screenshot({
           path: outputPath.replace(/\.mp4$/i, "") + ".poster.png",
           type: "png",

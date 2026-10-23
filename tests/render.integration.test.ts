@@ -1,5 +1,5 @@
 import { afterAll, describe, expect, test } from "vitest";
-import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, rm, writeFile, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { randomUUID } from "node:crypto";
@@ -48,6 +48,8 @@ describe("real export contract", () => {
       audio: { score: false, sentenceTracks: 1 },
     });
     expect(report.inspections.flatMap((i) => i.issues)).toEqual([]);
+    const poster = await readFile(join(work, "audio-check.poster.png"));
+    expect(poster.subarray(1, 4).toString()).toBe("PNG");
     expect(
       (report.ffprobe as { streams: { codec_type: string }[] }).streams.some(
         (s) => s.codec_type === "audio",

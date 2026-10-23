@@ -6,7 +6,7 @@ import {
   Film,
   LoaderCircle,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   validateProject,
   validateVariant,
@@ -28,6 +28,7 @@ export function ChecksPanel({ project, locale, ratio, autoRender }: Props) {
     revision: number;
   } | null>(null);
   const [busy, setBusy] = useState(false);
+  const inFlight = useRef(false);
   const [error, setError] = useState("");
   const sourceIssues = validateProject(project);
   const outputIssues = validateVariant(project, locale, ratio);
@@ -58,6 +59,10 @@ export function ChecksPanel({ project, locale, ratio, autoRender }: Props) {
   ];
   const blocking = issues.filter((issue) => issue.severity === "error");
   const render = async () => {
+    // The toolbar can request another export even while this panel is hidden.
+    // Reserve synchronously so repeated clicks cannot erase the active job.
+    if (inFlight.current || blocking.length > 0) return;
+    inFlight.current = true;
     setBusy(true);
     setError("");
     setJob(null);
@@ -65,6 +70,7 @@ export function ChecksPanel({ project, locale, ratio, autoRender }: Props) {
     try {
       setJob(await startRender(project, locale, ratio));
     } catch (error) {
+      inFlight.current = false;
       setError(error instanceof Error ? error.message : "Render failed.");
       setBusy(false);
     }
@@ -77,13 +83,17 @@ export function ChecksPanel({ project, locale, ratio, autoRender }: Props) {
       !job ||
       ["complete", "completed", "failed", "error"].includes(job.status)
     ) {
-      if (job) setBusy(false);
+      if (job) {
+        inFlight.current = false;
+        setBusy(false);
+      }
       return;
     }
     const timer = window.setTimeout(async () => {
       try {
         setJob(await getRender(job.id));
       } catch (error) {
+        inFlight.current = false;
         setError(
           error instanceof Error
             ? error.message

@@ -14,7 +14,7 @@ An open motion studio for building original scene sequences with people and Clau
 
 Start a blank project. Add your scenes, text and media. Shape their timing and motion, then export in two languages and two ratios. Ask Claude to propose a new scene or a revision; inspect the operations before applying them. Sentence timing stays connected, and your protected layout stays where you put it.
 
-**Motion-video authoring alpha — v0.1.0-alpha.5.** A local scene editor and deterministic export pipeline for a deliberately bounded project format. See the [authoring acceptance record](docs/verification/authoring-acceptance.json) for the recorded checks and limitations; the [competitive review](docs/competitive-landscape.md) explains the scope.
+**Motion-video authoring alpha — v0.1.0-alpha.6.** A local scene editor and deterministic export pipeline for a deliberately bounded project format. See the [authoring acceptance record](docs/verification/authoring-acceptance.json) for the recorded checks and limitations; the [competitive review](docs/competitive-landscape.md) explains the scope.
 
 ## Run locally
 
@@ -27,6 +27,7 @@ npm ci
 npx playwright install chromium
 # macOS, if FFmpeg is missing: brew install ffmpeg
 # Ubuntu: sudo apt-get install ffmpeg
+npm run doctor
 npm run dev
 ```
 
@@ -52,6 +53,8 @@ The local server sends the project JSON and your instruction to Claude. Tools, M
 The [alpha.4 live-provider record](docs/verification/claude-live.json) is historical evidence for the original integration. The [alpha.5 live call](docs/verification/authoring-ai.json) created a new bilingual scene while preserving the existing protected scene. Browser and render evidence is recorded in [authoring acceptance](docs/verification/authoring-acceptance.json). Automated provider fixtures are labeled separately from real authenticated calls; a fixture does not establish live Claude behavior.
 
 ## Real rendered demos
+
+The current [alpha.6 release](https://github.com/webizmo/cadencegraph/releases/tag/v0.1.0-alpha.6) includes four freshly rendered Community Garden variants, a real production-mode studio export, desktop/mobile screenshots, a source archive with the example media, and a commit-bound manifest plus checksums. The [release guide](docs/releasing.md) describes how to reproduce and verify the package.
 
 The [alpha.5 release](https://github.com/webizmo/cadencegraph/releases/tag/v0.1.0-alpha.5) accompanies the original authoring example, [Community Garden](examples/community-garden.cadence.json), and its [acceptance record](docs/verification/authoring-acceptance.json). Use the record and release assets to inspect what was actually rendered and checked.
 
@@ -100,11 +103,13 @@ HyperFrames, Remotion, Motion Canvas, Rive, Canva and CapCut already offer subst
 npm run check       # core, API, motion tests; TypeScript; production build
 npm run test:e2e    # editor acceptance in Chromium
 npm audit
+npm run doctor     # actionable Node/Chromium/FFmpeg installation checks
+npm run verify:production  # after build: production UI, upload, real MP4 download
 npx tsx scripts/verify-authoring.ts  # studio must be running; UI authoring + five real exports
 npx tsx scripts/verify-authoring-media.ts  # decode and verify all five exports
 npx tsx scripts/verify-authoring-ai.ts  # optional real provider call, requires login
 ```
 
-See [architecture](docs/architecture.md), [format](docs/project-format.md), [renderer](docs/rendering.md), [components](docs/components.md), [verification](docs/verification/README.md), [security](SECURITY.md) and [third-party licenses](THIRD_PARTY_NOTICES.md).
+See [release process](docs/releasing.md), [architecture](docs/architecture.md), [format](docs/project-format.md), [renderer](docs/rendering.md), [components](docs/components.md), [verification](docs/verification/README.md), [security](SECURITY.md) and [third-party licenses](THIRD_PARTY_NOTICES.md).
 
 Apache-2.0 for original source and original demo graphics. Fonts and external tools retain their own licenses. Built by [Webizmo](https://webizmo.tr).

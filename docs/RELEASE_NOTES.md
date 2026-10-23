@@ -1,3 +1,18 @@
+# v0.1.0-alpha.6
+
+This release closes installation, export-recovery and release-packaging gaps in the local motion studio.
+
+- Repeated **Export film** clicks retain the active job and its original language/ratio/revision, including when switching panels or variants. Source errors also block toolbar-triggered export.
+- Films shorter than two seconds now receive their PNG poster, using a frame near the middle of a short film.
+- `npm run doctor` checks the Node minimum, launches Chromium, checks ffprobe and confirms FFmpeg's libx264 encoder. `/api/status` reports actual renderer availability. Oversized JSON uploads return HTTP 413 with the applicable project/media limit.
+- A production-mode browser check verifies media uploaded after build, project import/reload, desktop/mobile layouts, the real export button/API/download, short-film poster and complete MP4 decode.
+- Release preparation is version-driven and commit-bound. It requires clean source and matching production evidence, renders four bilingual/ratio variants, bundles the exact source and creates a manifest and checksums. Verification rejects modified assets and checks all five real MP4s.
+- CI now covers Ubuntu with Node 22/24 and macOS with Node 24; each job runs production export and retains verification artifacts. A manual workflow can reproduce a release package from its version tag.
+
+Local validation: 107 unit/integration tests and 22 Chromium browser tests pass, along with the production export check and a dependency audit with zero reported vulnerabilities. Validation commands and publication gates are in [releasing](releasing.md). Downloadable evidence is in this release's `release-manifest.json`, `production-verification.json`, per-film reports and screenshots. Existing alpha.5 authoring/provider evidence remains historical; no new live Claude call is claimed. The alpha.5 authoring capabilities and documented format boundaries are unchanged. This is a prerelease, not a claim of general-purpose editor parity, cloud hosting or physical-device certification.
+
+---
+
 # v0.1.0-alpha.5
 
 CadenceGraph can now build an original film from an empty project. The previous editor exposed revisions of an existing three-scene example; this release adds scene and layer authoring through the same validated, undoable transaction engine.

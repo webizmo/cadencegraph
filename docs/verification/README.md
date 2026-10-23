@@ -1,8 +1,16 @@
+# Current release verification
+
+Alpha.6 adds commit-bound release packages and production-mode browser/export acceptance. See [the release guide](../releasing.md) for reproducible commands and CI targets. The release assets contain `production-verification.json`, desktop/mobile screenshots, one short studio-export film and four freshly rendered Community Garden films, their posters/reports, exact Git source archive, `release-manifest.json` and `SHA256SUMS`.
+
+`npm run release:verify -- <directory>` checks the complete asset inventory and hashes, then ffprobe properties and full FFmpeg decoding of all five films. `npm run verify:production` runs against a fresh production server, independently of the development-server E2E suite. CI evidence includes the Node/OS matrix and retains failure traces. These are automated Chromium viewport checks, not physical-device or independent creative acceptance. Live Claude is not invoked in these gates; the alpha.5 record below is explicitly historical.
+
+---
+
 # Acceptance evidence
 
 ## Alpha.5 authoring
 
-The current release has 103 passing unit/integration tests and 21 Chromium browser tests. `npm run check`, `npm run format:check`, `npm run test:e2e` and `npm audit --audit-level=high` form the local/CI gate.
+The historical alpha.5 baseline had 103 passing unit/integration tests and 21 Chromium browser tests. `npm run check`, `npm run format:check`, `npm run test:e2e` and `npm audit --audit-level=high` form the local/CI gate.
 
 | Evidence | Verified scope |
 | --- | --- |

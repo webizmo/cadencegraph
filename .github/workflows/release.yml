@@ -1,0 +1,41 @@
+name: Prepare release
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing version tag to verify and package
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Check requested version
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: node --input-type=module -e 'import p from "./package.json" with {type:"json"}; if (process.env.RELEASE_TAG !== `v${p.version}`) process.exit(1)'
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - run: npm run doctor && npm run check && npm run format:check
+      - run: npm run test:e2e && npm audit --audit-level=high
+      - run: npm run verify:production
+      - run: npm run release:prepare
+      - name: Verify package
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: npm run release:verify -- "outputs/releases/$RELEASE_TAG"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-package
+          path: outputs/releases/
+          retention-days: 14

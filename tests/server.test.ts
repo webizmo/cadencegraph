@@ -123,3 +123,46 @@ describe("Local API boundaries", () => {
     ).toBe(400);
   });
 });
+
+describe("release readiness API", () => {
+  it("reports missing renderer dependencies instead of unconditional availability", async () => {
+    const app = createApp({
+      baseUrl: "http://127.0.0.1",
+      status: async () => ({ provider: "fixture", available: false }),
+      rendererStatus: async () => ({
+        available: false,
+        engine: "Chromium + FFmpeg",
+        checks: [
+          { name: "ffmpeg", available: false, detail: "Install FFmpeg" },
+        ],
+      }),
+    });
+    const server = app.listen(0, "127.0.0.1");
+    servers.push(server);
+    await new Promise<void>((r) => server.once("listening", r));
+    const address = server.address();
+    if (!address || typeof address === "string") throw new Error();
+    const response = await fetch(`http://127.0.0.1:${address.port}/api/status`);
+    expect(await response.json()).toMatchObject({
+      renderer: {
+        available: false,
+        checks: [{ name: "ffmpeg", detail: "Install FFmpeg" }],
+      },
+    });
+  });
+  it("returns 413 with the correct project and media limits", async () => {
+    const base = await start();
+    for (const [path, size, message] of [
+      ["/api/render", 3, "2 MB"],
+      ["/api/media", 29, "28 MB"],
+    ] as const) {
+      const response = await fetch(`${base}${path}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ data: "a".repeat(size * 1024 * 1024) }),
+      });
+      expect(response.status).toBe(413);
+      expect((await response.json()).error).toContain(message);
+    }
+  });
+});
